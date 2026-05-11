@@ -36,7 +36,7 @@ service StateService {
   // Clients SHOULD NOT assume that the set of active contracts they receive reflects the state at the ledger end.
   rpc GetActiveContractsPage(GetActiveContractsPageRequest) returns (GetActiveContractsPageResponse) {
     option (google.api.http) = {
-      get: "/v2/state/active-contracts-page"
+      post: "/v2/state/active-contracts-page"
       body: "*"
     };
   }
