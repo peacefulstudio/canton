@@ -6,6 +6,7 @@ syntax = "proto3";
 package com.daml.ledger.api.v2;
 
 import "com/daml/ledger/api/v2/experimental_features.proto";
+import "google/api/annotations.proto";
 import "google/protobuf/duration.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
@@ -16,7 +17,11 @@ option java_package = "com.daml.ledger.api.v2";
 // Allows clients to retrieve information about the ledger API version
 service VersionService {
   // Read the Ledger API version
-  rpc GetLedgerApiVersion(GetLedgerApiVersionRequest) returns (GetLedgerApiVersionResponse);
+  rpc GetLedgerApiVersion(GetLedgerApiVersionRequest) returns (GetLedgerApiVersionResponse) {
+    option (google.api.http) = {
+      get: "/v2/version"
+    };
+  }
 }
 
 message GetLedgerApiVersionRequest {}
