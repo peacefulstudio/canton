@@ -1,0 +1,32 @@
+name: Claude Code
+
+on:
+  workflow_dispatch:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+  pull_request:
+    types: [opened, synchronize, review_requested]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  id-token: write
+  actions: read
+
+jobs:
+  claude:
+    # Skip dependabot PRs — routine minor/patch bumps are validated by CI
+    # (build + tests) and handled by the automerge workflow; a Claude review
+    # on every bump is noise, not signal. Non-PR events (issue comments,
+    # @claude mentions, etc.) still fire because github.event.pull_request is
+    # null for those, so this condition evaluates true.
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
+    uses: peacefulstudio/github-actions/.github/workflows/claude.yaml@v1
+    secrets: inherit

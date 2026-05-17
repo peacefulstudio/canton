@@ -1,0 +1,53 @@
+# Workaround: GitHub computes `mergeable` asynchronously, so PRs still in
+# UNKNOWN state at the time of this run are silently excluded by the
+# `mergeable == "CONFLICTING"` filter; they are picked up by the next
+# push to dev once GitHub has classified them.
+name: Auto Resolve Merge Conflicts
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  find-conflicts:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      pr_numbers: ${{ steps.list.outputs.pr_numbers }}
+    steps:
+      - id: list
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_REF: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          # Workaround for gh CLI: --jq pretty-prints JSON arrays across
+          # multiple lines (cli/cli#5147), which breaks the key=value
+          # GITHUB_OUTPUT format the moment there is more than one
+          # conflicting PR. Use the documented heredoc syntax to allow
+          # multi-line values verbatim — the downstream fromJSON() then
+          # parses the array correctly.
+          PRS=$(gh pr list --repo "$REPO" \
+                  --base "$BASE_REF" --state open \
+                  --json number,mergeable \
+                  --jq '[.[] | select(.mergeable == "CONFLICTING") | .number]')
+          {
+            echo "pr_numbers<<PRS_EOF"
+            echo "$PRS"
+            echo "PRS_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+  resolve:
+    needs: find-conflicts
+    if: needs.find-conflicts.outputs.pr_numbers != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        pr: ${{ fromJSON(needs.find-conflicts.outputs.pr_numbers) }}
+    uses: peacefulstudio/github-actions/.github/workflows/merge-conflict-autofix.yaml@v1
+    with:
+      pull_request_number: ${{ matrix.pr }}
+      base_ref: ${{ github.ref_name }}
+    secrets: inherit

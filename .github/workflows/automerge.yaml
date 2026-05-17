@@ -1,0 +1,63 @@
+# Auto-approves and enables auto-merge for dependabot PRs on non-major bumps.
+# Merge still gates on branch-protection required checks — this workflow just
+# opts the PR in; it does not bypass protection.
+#
+# `pull_request_target` is required so secrets (the App private key used to
+# mint a token below) are available for dependabot-authored PRs — under plain
+# `pull_request`, dependabot runs with a read-only token and no secrets.
+# SECURITY: do NOT add `actions/checkout` with `ref: github.event.pull_request.head.sha`
+# here. That would execute untrusted PR code with a write token + secrets.
+#
+# Approval identity is a GitHub App (vars.BOT_APP_ID +
+# secrets.BOT_APP_PRIVATE_KEY) rather than a long-lived PAT. The minted
+# installation token is scoped to this repo, limited to the App's
+# permissions (Pull requests: write, Contents: write), and expires in ~1h —
+# safe to use from public repos.
+name: Automerge
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  auto-merge:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch dependabot metadata
+        id: meta
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Mint App token
+        id: app-token
+        if: steps.meta.outputs.update-type == 'version-update:semver-patch' || steps.meta.outputs.update-type == 'version-update:semver-minor'
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
+
+      # Positive allow-list: unknown/empty update-type (fetch-metadata failure,
+      # grouped updates without a classification) falls through as "do nothing"
+      # rather than auto-merging a major bump.
+      - name: Approve PR
+        if: steps.meta.outputs.update-type == 'version-update:semver-patch' || steps.meta.outputs.update-type == 'version-update:semver-minor'
+        # App token (not GITHUB_TOKEN) because GitHub rejects a token from
+        # approving its own PR, and the default token runs as the same
+        # dependabot[bot] identity that authored the PR.
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+
+      - name: Enable auto-merge
+        if: steps.meta.outputs.update-type == 'version-update:semver-patch' || steps.meta.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
