@@ -1,0 +1,10 @@
+--- /Users/matthieu/Code/peaceful/canton/experiment-evidence/go-package-harmlessness/version_service.before.descriptor.nosourceinfo.txt	2026-05-11 16:16:34
++++ /Users/matthieu/Code/peaceful/canton/experiment-evidence/go-package-harmlessness/version_service.after.descriptor.nosourceinfo.txt	2026-05-11 16:16:34
+@@ -132,6 +132,7 @@
+ options {
+   java_package: "com.daml.ledger.api.v2"
+   java_outer_classname: "VersionServiceOuterClass"
++  go_package: "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2"
+   csharp_namespace: "Com.Daml.Ledger.Api.V2"
+ }
+ syntax: "proto3"

@@ -1,0 +1,137 @@
+name: "com/daml/ledger/api/v2/version_service.proto"
+package: "com.daml.ledger.api.v2"
+dependency: "com/daml/ledger/api/v2/experimental_features.proto"
+dependency: "google/protobuf/duration.proto"
+message_type {
+  name: "GetLedgerApiVersionRequest"
+}
+message_type {
+  name: "GetLedgerApiVersionResponse"
+  field {
+    name: "version"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "version"
+  }
+  field {
+    name: "features"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".com.daml.ledger.api.v2.FeaturesDescriptor"
+    json_name: "features"
+  }
+}
+message_type {
+  name: "FeaturesDescriptor"
+  field {
+    name: "experimental"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".com.daml.ledger.api.v2.ExperimentalFeatures"
+    json_name: "experimental"
+  }
+  field {
+    name: "user_management"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".com.daml.ledger.api.v2.UserManagementFeature"
+    json_name: "userManagement"
+  }
+  field {
+    name: "party_management"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".com.daml.ledger.api.v2.PartyManagementFeature"
+    json_name: "partyManagement"
+  }
+  field {
+    name: "offset_checkpoint"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".com.daml.ledger.api.v2.OffsetCheckpointFeature"
+    json_name: "offsetCheckpoint"
+  }
+  field {
+    name: "package_feature"
+    number: 5
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".com.daml.ledger.api.v2.PackageFeature"
+    json_name: "packageFeature"
+  }
+}
+message_type {
+  name: "UserManagementFeature"
+  field {
+    name: "supported"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "supported"
+  }
+  field {
+    name: "max_rights_per_user"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+    json_name: "maxRightsPerUser"
+  }
+  field {
+    name: "max_users_page_size"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+    json_name: "maxUsersPageSize"
+  }
+}
+message_type {
+  name: "PartyManagementFeature"
+  field {
+    name: "max_parties_page_size"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+    json_name: "maxPartiesPageSize"
+  }
+}
+message_type {
+  name: "PackageFeature"
+  field {
+    name: "max_vetted_packages_page_size"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+    json_name: "maxVettedPackagesPageSize"
+  }
+}
+message_type {
+  name: "OffsetCheckpointFeature"
+  field {
+    name: "max_offset_checkpoint_emission_delay"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".google.protobuf.Duration"
+    json_name: "maxOffsetCheckpointEmissionDelay"
+  }
+}
+service {
+  name: "VersionService"
+  method {
+    name: "GetLedgerApiVersion"
+    input_type: ".com.daml.ledger.api.v2.GetLedgerApiVersionRequest"
+    output_type: ".com.daml.ledger.api.v2.GetLedgerApiVersionResponse"
+  }
+}
+options {
+  java_package: "com.daml.ledger.api.v2"
+  java_outer_classname: "VersionServiceOuterClass"
+  csharp_namespace: "Com.Daml.Ledger.Api.V2"
+}
+syntax: "proto3"
