@@ -1,0 +1,1372 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "com/daml/ledger/api/v2/command_service.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "CommandService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v2/commands/submit-and-wait": {
+      "post": {
+        "summary": "Submits a single composite command and waits for its result.\nPropagates the gRPC error of failed submissions including Daml interpretation errors.",
+        "operationId": "CommandService_SubmitAndWait",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/com.daml.ledger.api.v2.SubmitAndWaitResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/google.rpc.Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "commands",
+            "description": "The commands to be submitted.\n\nRequired",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/com.daml.ledger.api.v2.Commands"
+            }
+          }
+        ],
+        "tags": [
+          "CommandService"
+        ]
+      }
+    },
+    "/v2/commands/submit-and-wait-for-reassignment": {
+      "post": {
+        "summary": "Submits a single composite reassignment command, waits for its result, and returns the reassignment.\nPropagates the gRPC error of failed submission.",
+        "operationId": "CommandService_SubmitAndWaitForReassignment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/com.daml.ledger.api.v2.SubmitAndWaitForReassignmentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/google.rpc.Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "This reassignment is executed as a single atomic update.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/com.daml.ledger.api.v2.SubmitAndWaitForReassignmentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CommandService"
+        ]
+      }
+    },
+    "/v2/commands/submit-and-wait-for-transaction": {
+      "post": {
+        "summary": "Submits a single composite command, waits for its result, and returns the transaction.\nPropagates the gRPC error of failed submissions including Daml interpretation errors.",
+        "operationId": "CommandService_SubmitAndWaitForTransaction",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/com.daml.ledger.api.v2.SubmitAndWaitForTransactionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/google.rpc.Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "These commands are executed as a single atomic transaction.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/com.daml.ledger.api.v2.SubmitAndWaitForTransactionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CommandService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "com.daml.ledger.api.v2.ArchivedEvent": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "string",
+          "format": "int64",
+          "description": "Required",
+          "title": "The offset of origin.\nOffsets are managed by the participant nodes.\nTransactions can thus NOT be assumed to have the same offsets on different participant nodes.\nIt is a valid absolute offset (positive integer)"
+        },
+        "nodeId": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Required",
+          "title": "The position of this event in the originating transaction or reassignment.\nNode IDs are not necessarily equal across participants,\nas these may see different projections/parts of transactions.\nMust be valid node ID (non-negative integer)"
+        },
+        "contractId": {
+          "type": "string",
+          "description": "The ID of the archived contract.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "templateId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "Identifies the template that defines the choice that archived the contract.\nThis template's package-id may differ from the target contract's package-id\nif the target contract has been upgraded or downgraded.\n\nThe identifier uses the package-id reference format.\n\nRequired"
+        },
+        "witnessParties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The parties that are notified of this event. For an ``ArchivedEvent``,\nthese are the intersection of the stakeholders of the contract in\nquestion and the parties specified in the ``TransactionFilter``. The\nstakeholders are the union of the signatories and the observers of\nthe contract.\nEach one of its elements must be a valid PartyIdString (as described\nin ``value.proto``).\n\nRequired: must be non-empty"
+        },
+        "packageName": {
+          "type": "string",
+          "description": "The package name of the contract.\n\nRequired"
+        },
+        "implementedInterfaces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier"
+          },
+          "description": "The interfaces implemented by the target template that have been\nmatched from the interface filter query.\nPopulated only in case interface filters with include_interface_view set.\n\nIf defined, the identifier uses the package-id reference format.\n\nOptional: can be empty"
+        }
+      },
+      "description": "Records that a contract has been archived, and choices may no longer be exercised on it."
+    },
+    "com.daml.ledger.api.v2.AssignCommand": {
+      "type": "object",
+      "properties": {
+        "reassignmentId": {
+          "type": "string",
+          "description": "The ID from the unassigned event to be completed by this assignment.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "source": {
+          "type": "string",
+          "description": "Required",
+          "title": "The ID of the source synchronizer\nMust be a valid synchronizer id"
+        },
+        "target": {
+          "type": "string",
+          "description": "Required",
+          "title": "The ID of the target synchronizer\nMust be a valid synchronizer id"
+        }
+      },
+      "title": "Assign a contract"
+    },
+    "com.daml.ledger.api.v2.AssignedEvent": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The ID of the source synchronizer.\nMust be a valid synchronizer id.\n\nRequired"
+        },
+        "target": {
+          "type": "string",
+          "description": "The ID of the target synchronizer.\nMust be a valid synchronizer id.\n\nRequired"
+        },
+        "reassignmentId": {
+          "type": "string",
+          "description": "The ID from the unassigned event.\nFor correlation capabilities.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "submitter": {
+          "type": "string",
+          "description": "Party on whose behalf the assign command was executed.\nEmpty if the assignment happened offline via the repair service.\nMust be a valid PartyIdString (as described in ``value.proto``).\n\nOptional"
+        },
+        "reassignmentCounter": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Each corresponding assigned and unassigned event has the same reassignment_counter. This strictly increases\nwith each unassign command for the same contract. Creation of the contract corresponds to reassignment_counter\nequals zero.\n\nRequired"
+        },
+        "createdEvent": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.CreatedEvent",
+          "description": "The offset of this event refers to the offset of the assignment,\nwhile the node_id is the index of within the batch.\n\nRequired"
+        }
+      },
+      "description": "Records that a contract has been assigned, and it can be used on the target synchronizer."
+    },
+    "com.daml.ledger.api.v2.Command": {
+      "type": "object",
+      "properties": {
+        "create": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.CreateCommand"
+        },
+        "exercise": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.ExerciseCommand"
+        },
+        "exerciseByKey": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.ExerciseByKeyCommand"
+        },
+        "createAndExercise": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.CreateAndExerciseCommand"
+        }
+      },
+      "description": "A command can either create a new contract or exercise a choice on an existing contract."
+    },
+    "com.daml.ledger.api.v2.Commands": {
+      "type": "object",
+      "properties": {
+        "workflowId": {
+          "type": "string",
+          "description": "Identifier of the on-ledger workflow that this command is a part of.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nOptional"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Uniquely identifies the participant user that issued the command.\nMust be a valid UserIdString (as described in ``value.proto``).\nRequired unless authentication is used with a user token.\nIn that case, the token's user-id will be used for the request's user_id.\n\nOptional"
+        },
+        "commandId": {
+          "type": "string",
+          "description": "Uniquely identifies the command.\nThe triple (user_id, act_as, command_id) constitutes the change ID for the intended ledger change,\nwhere act_as is interpreted as a set of party names.\nThe change ID can be used for matching the intended ledger changes with all their completions.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.Command"
+          },
+          "description": "Individual elements of this atomic command. Must be non-empty.\n\nRequired: must be non-empty"
+        },
+        "deduplicationDuration": {
+          "type": "string",
+          "description": "Specifies the length of the deduplication period.\nIt is interpreted relative to the local clock at some point during the submission's processing.\nMust be non-negative. Must not exceed the maximum deduplication time."
+        },
+        "deduplicationOffset": {
+          "type": "string",
+          "format": "int64",
+          "description": "Specifies the start of the deduplication period by a completion stream offset (exclusive).\nMust be a valid absolute offset (positive integer) or participant begin (zero)."
+        },
+        "minLedgerTimeAbs": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Lower bound for the ledger time assigned to the resulting transaction.\nNote: The ledger time of a transaction is assigned as part of command interpretation.\nUse this property if you expect that command interpretation will take a considerate amount of time, such that by\nthe time the resulting transaction is sequenced, its assigned ledger time is not valid anymore.\nMust not be set at the same time as min_ledger_time_rel.\n\nOptional"
+        },
+        "minLedgerTimeRel": {
+          "type": "string",
+          "description": "Same as min_ledger_time_abs, but specified as a duration, starting from the time the command is received by the server.\nMust not be set at the same time as min_ledger_time_abs.\n\nOptional"
+        },
+        "actAs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Set of parties on whose behalf the command should be executed.\nIf ledger API authorization is enabled, then the authorization metadata must authorize the sender of the request\nto act on behalf of each of the given parties.\nEach element must be a valid PartyIdString (as described in ``value.proto``).\n\nRequired: must be non-empty"
+        },
+        "readAs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Set of parties on whose behalf (in addition to all parties listed in ``act_as``) contracts can be retrieved.\nThis affects Daml operations such as ``fetch``, ``fetchByKey``, ``lookupByKey``, ``exercise``, and ``exerciseByKey``.\nNote: A participant node of a Daml network can host multiple parties. Each contract present on the participant\nnode is only visible to a subset of these parties. A command can only use contracts that are visible to at least\none of the parties in ``act_as`` or ``read_as``. This visibility check is independent from the Daml authorization\nrules for fetch operations.\nIf ledger API authorization is enabled, then the authorization metadata must authorize the sender of the request\nto read contract data on behalf of each of the given parties.\n\nOptional: can be empty"
+        },
+        "submissionId": {
+          "type": "string",
+          "description": "A unique identifier to distinguish completions for different submissions with the same change ID.\nTypically a random UUID. Applications are expected to use a different UUID for each retry of a submission\nwith the same change ID.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nIf omitted, the participant or the committer may set a value of their choice.\n\nOptional"
+        },
+        "disclosedContracts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.DisclosedContract"
+          },
+          "description": "Additional contracts used to resolve contract \u0026 contract key lookups.\n\nOptional: can be empty"
+        },
+        "synchronizerId": {
+          "type": "string",
+          "description": "Optional",
+          "title": "Must be a valid synchronizer id"
+        },
+        "packageIdSelectionPreference": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional: can be empty",
+          "title": "The package-id selection preference of the client for resolving\npackage names and interface instances in command submission and interpretation"
+        },
+        "prefetchContractKeys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.PrefetchContractKey"
+          },
+          "description": "Fetches the contract keys into the caches to speed up the command processing.\nShould only contain contract keys that are expected to be resolved during interpretation of the commands.\nKeys of disclosed contracts do not need prefetching.\n\nOptional: can be empty"
+        },
+        "tapsMaxPasses": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The maximum number of passes for the Topology-Aware Package Selection (TAPS).\nHigher values can increase the chance of successful package selection for routing of interpreted transactions.\nIf unset, this defaults to the value defined in the participant configuration.\nThe provided value must not exceed the limit specified in the participant configuration.\n\nOptional"
+        }
+      },
+      "description": "A composite command that groups multiple commands together."
+    },
+    "com.daml.ledger.api.v2.CreateAndExerciseCommand": {
+      "type": "object",
+      "properties": {
+        "templateId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "The template of the contract the client wants to create.\nBoth package-name and package-id reference identifier formats for the template-id are supported.\nNote: The package-id reference identifier format is deprecated. We plan to end support for this format in version 3.4.\n\nRequired"
+        },
+        "createArguments": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Record",
+          "description": "The arguments required for creating a contract from this template.\n\nRequired"
+        },
+        "choice": {
+          "type": "string",
+          "description": "The name of the choice the client wants to exercise.\nMust be a valid NameString (as described in ``value.proto``).\n\nRequired"
+        },
+        "choiceArgument": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value",
+          "description": "The argument for this choice.\n\nRequired"
+        }
+      },
+      "description": "Create a contract and exercise a choice on it in the same transaction."
+    },
+    "com.daml.ledger.api.v2.CreateCommand": {
+      "type": "object",
+      "properties": {
+        "templateId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "The template of contract the client wants to create.\nBoth package-name and package-id reference identifier formats for the template-id are supported.\nNote: The package-id reference identifier format is deprecated. We plan to end support for this format in version 3.4.\n\nRequired"
+        },
+        "createArguments": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Record",
+          "description": "The arguments required for creating a contract from this template.\n\nRequired"
+        }
+      },
+      "description": "Create a new contract instance based on a template."
+    },
+    "com.daml.ledger.api.v2.CreatedEvent": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "string",
+          "format": "int64",
+          "description": "Required",
+          "title": "The offset of origin, which has contextual meaning, please see description at messages that include a CreatedEvent.\nOffsets are managed by the participant nodes.\nTransactions can thus NOT be assumed to have the same offsets on different participant nodes.\nIt is a valid absolute offset (positive integer)"
+        },
+        "nodeId": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Required",
+          "title": "The position of this event in the originating transaction or reassignment.\nThe origin has contextual meaning, please see description at messages that include a CreatedEvent.\nNode IDs are not necessarily equal across participants,\nas these may see different projections/parts of transactions.\nMust be valid node ID (non-negative integer)"
+        },
+        "contractId": {
+          "type": "string",
+          "description": "The ID of the created contract.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "templateId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "The template of the created contract.\nThe identifier uses the package-id reference format.\n\nRequired"
+        },
+        "contractKey": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value",
+          "description": "The key of the created contract.\nThis will be set if and only if ``template_id`` defines a contract key.\n\nOptional"
+        },
+        "contractKeyHash": {
+          "type": "string",
+          "format": "byte",
+          "description": "The hash of contract_key.\nThis will be set if and only if ``template_id`` defines a contract key.\n\nOptional: can be empty"
+        },
+        "createArguments": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Record",
+          "description": "The arguments that have been used to create the contract.\n\nRequired"
+        },
+        "createdEventBlob": {
+          "type": "string",
+          "format": "byte",
+          "description": "Opaque representation of contract create event payload intended for forwarding\nto an API server as a contract disclosed as part of a command\nsubmission.\n\nOptional: can be empty"
+        },
+        "interfaceViews": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.InterfaceView"
+          },
+          "description": "- its party in the ``witness_parties`` of this event,\n- and which is implemented by the template of this event,\n- and which has ``include_interface_view`` set.\n\nOptional: can be empty",
+          "title": "Interface views specified in the transaction filter.\nIncludes an ``InterfaceView`` for each interface for which there is a ``InterfaceFilter`` with"
+        },
+        "witnessParties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The parties that are notified of this event. When a ``CreatedEvent``\nis returned as part of a transaction tree or ledger-effects transaction, this will include all\nthe parties specified in the ``TransactionFilter`` that are witnesses  of the event\n(the stakeholders of the contract and all informees of all the ancestors\nof this create action that this participant knows about).\nIf served as part of a ACS delta transaction those will\nbe limited to all parties specified in the ``TransactionFilter`` that\nare stakeholders of the contract (i.e. either signatories or observers).\nIf the ``CreatedEvent`` is returned as part of an AssignedEvent,\nActiveContract or IncompleteUnassigned (so the event is related to\nan assignment or unassignment): this will include all parties of the\n``TransactionFilter`` that are stakeholders of the contract.\n\nThe behavior of reading create events visible to parties not hosted\non the participant node serving the Ledger API is undefined. Concretely,\nthere is neither a guarantee that the participant node will serve all their\ncreate events on the ACS stream, nor is there a guarantee that matching archive\nevents are delivered for such create events.\n\nFor most clients this is not a problem, as they only read events for parties\nthat are hosted on the participant node. If you need to read events\nfor parties that may not be hosted at all times on the participant node,\nsubscribe to the ``TopologyEvent``s for that party by setting a corresponding\n``UpdateFormat``.  Using these events, query the ACS as-of an offset where the\nparty is hosted on the participant node, and ignore create events at offsets\nwhere the party is not hosted on the participant node.\n\nRequired: must be non-empty"
+        },
+        "signatories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The signatories for this contract as specified by the template.\n\nRequired: must be non-empty"
+        },
+        "observers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The observers for this contract as specified explicitly by the template or implicitly as choice controllers.\nThis field never contains parties that are signatories.\n\nOptional: can be empty"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Ledger effective time of the transaction that created the contract.\n\nRequired"
+        },
+        "packageName": {
+          "type": "string",
+          "description": "The package name of the created contract.\n\nRequired"
+        },
+        "acsDelta": {
+          "type": "boolean",
+          "description": "Whether this event would be part of respective ACS_DELTA shaped stream,\nand should therefore considered when tracking contract activeness on the client-side.\n\nRequired"
+        },
+        "representativePackageId": {
+          "type": "string",
+          "description": "A package-id present in the participant package store that typechecks the contract's argument.\nThis may differ from the package-id of the template used to create the contract.\nFor contracts created before Canton 3.4, this field matches the contract's creation package-id.\n\nNOTE: Experimental, server internal concept, not for client consumption. Subject to change without notice.\n\nRequired"
+        }
+      },
+      "description": "Records that a contract has been created, and choices may now be exercised on it."
+    },
+    "com.daml.ledger.api.v2.CumulativeFilter": {
+      "type": "object",
+      "properties": {
+        "wildcardFilter": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.WildcardFilter",
+          "description": "Optional",
+          "title": "A wildcard filter that matches all templates"
+        },
+        "interfaceFilter": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.InterfaceFilter",
+          "description": "Include an ``InterfaceView`` for every ``InterfaceFilter`` matching a contract.\nThe ``InterfaceFilter`` instances MUST each use a unique ``interface_id``.\n\nOptional"
+        },
+        "templateFilter": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.TemplateFilter",
+          "description": "A template for which the data will be included in the\n``create_arguments`` of a matching ``CreatedEvent``.\nIf a contract is simultaneously selected by a template filter and one or more interface filters,\nthe corresponding ``include_created_event_blob`` are consolidated using an OR operation.\n\nOptional"
+        }
+      },
+      "description": "A filter that matches all contracts that are either an instance of one of\nthe ``template_filters`` or that match one of the ``interface_filters``."
+    },
+    "com.daml.ledger.api.v2.DisclosedContract": {
+      "type": "object",
+      "properties": {
+        "templateId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "The template id of the contract.\nThe identifier uses the package-id reference format.\n\nIf provided, used to validate the template id of the contract serialized in the created_event_blob.\n\nOptional"
+        },
+        "contractId": {
+          "type": "string",
+          "description": "If provided, used to validate the contract id of the contract serialized in the created_event_blob.\n\nOptional",
+          "title": "The contract id"
+        },
+        "createdEventBlob": {
+          "type": "string",
+          "format": "byte",
+          "description": "Opaque byte string containing the complete payload required by the Daml engine\nto reconstruct a contract not known to the receiving participant.\n\nRequired: must be non-empty"
+        },
+        "synchronizerId": {
+          "type": "string",
+          "description": "Optional",
+          "title": "The ID of the synchronizer where the contract is currently assigned"
+        }
+      },
+      "description": "An additional contract that is used to resolve\ncontract \u0026 contract key lookups."
+    },
+    "com.daml.ledger.api.v2.Enum": {
+      "type": "object",
+      "properties": {
+        "enumId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "Omitted from the transaction stream when verbose streaming is not enabled.\nOptional when submitting commands."
+        },
+        "constructor": {
+          "type": "string",
+          "title": "Determines which of the Variant's alternatives is encoded in this message.\nMust be a valid NameString.\nRequired"
+        }
+      },
+      "description": "A value with finite set of alternative representations."
+    },
+    "com.daml.ledger.api.v2.Event": {
+      "type": "object",
+      "properties": {
+        "created": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.CreatedEvent",
+          "description": "The event as it appeared in the context of its original daml transaction on this participant node.\nIn particular, the offset, node_id pair of the daml transaction are preserved."
+        },
+        "archived": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.ArchivedEvent"
+        },
+        "exercised": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.ExercisedEvent"
+        }
+      },
+      "description": "- ACS delta: events can be CreatedEvent or ArchivedEvent\n- ledger effects: events can be CreatedEvent or ExercisedEvent\n\nIn the update service the events are restricted to the events\nvisible for the parties specified in the transaction filter. Each\nevent message type below contains a ``witness_parties`` field which\nindicates the subset of the requested parties that can see the event\nin question.",
+      "title": "Events in transactions can have two primary shapes:"
+    },
+    "com.daml.ledger.api.v2.EventFormat": {
+      "type": "object",
+      "properties": {
+        "filtersByParty": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/com.daml.ledger.api.v2.Filters"
+          },
+          "description": "1. For **ledger-effects** create and exercise events are returned, for which the witnesses include at least one of\n   the listed parties and match the per-party filter.\n2. For **transaction and active-contract-set streams** create and archive events are returned for all contracts whose\n   stakeholders include at least one of the listed parties and match the per-party filter.\n\nOptional: can be empty",
+          "title": "Each key must be a valid PartyIdString (as described in ``value.proto``).\nThe interpretation of the filter depends on the transaction-shape being filtered:"
+        },
+        "filtersForAnyParty": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Filters",
+          "description": "Wildcard filters that apply to all the parties existing on the participant. The interpretation of the filters is the same\nwith the per-party filter as described above.\n\nOptional"
+        },
+        "verbose": {
+          "type": "boolean",
+          "description": "If enabled, values served over the API will contain more information than strictly necessary to interpret the data.\nIn particular, setting the verbose flag to true triggers the ledger to include labels for record fields.\n\nOptional"
+        }
+      },
+      "description": "A format for events which defines both which events should be included\nand what data should be computed and included for them.\n\nNote that some of the filtering behavior depends on the `TransactionShape`,\nwhich is expected to be specified alongside usages of `EventFormat`."
+    },
+    "com.daml.ledger.api.v2.ExerciseByKeyCommand": {
+      "type": "object",
+      "properties": {
+        "templateId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "The template of contract the client wants to exercise.\nBoth package-name and package-id reference identifier formats for the template-id are supported.\nNote: The package-id reference identifier format is deprecated. We plan to end support for this format in version 3.4.\n\nRequired"
+        },
+        "contractKey": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value",
+          "description": "The key of the contract the client wants to exercise upon.\n\nRequired"
+        },
+        "choice": {
+          "type": "string",
+          "description": "Required",
+          "title": "The name of the choice the client wants to exercise.\nMust be a valid NameString (as described in ``value.proto``)"
+        },
+        "choiceArgument": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value",
+          "description": "The argument for this choice.\n\nRequired"
+        }
+      },
+      "description": "Exercise a choice on an existing contract specified by its key."
+    },
+    "com.daml.ledger.api.v2.ExerciseCommand": {
+      "type": "object",
+      "properties": {
+        "templateId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "The template or interface of the contract the client wants to exercise.\nBoth package-name and package-id reference identifier formats for the template-id are supported.\nNote: The package-id reference identifier format is deprecated. We plan to end support for this format in version 3.4.\nTo exercise a choice on an interface, specify the interface identifier in the template_id field.\n\nRequired"
+        },
+        "contractId": {
+          "type": "string",
+          "description": "The ID of the contract the client wants to exercise upon.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "choice": {
+          "type": "string",
+          "description": "Required",
+          "title": "The name of the choice the client wants to exercise.\nMust be a valid NameString (as described in ``value.proto``)"
+        },
+        "choiceArgument": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value",
+          "description": "The argument for this choice.\n\nRequired"
+        }
+      },
+      "description": "Exercise a choice on an existing contract."
+    },
+    "com.daml.ledger.api.v2.ExercisedEvent": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "string",
+          "format": "int64",
+          "description": "Required",
+          "title": "The offset of origin.\nOffsets are managed by the participant nodes.\nTransactions can thus NOT be assumed to have the same offsets on different participant nodes.\nIt is a valid absolute offset (positive integer)"
+        },
+        "nodeId": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Required",
+          "title": "The position of this event in the originating transaction or reassignment.\nNode IDs are not necessarily equal across participants,\nas these may see different projections/parts of transactions.\nMust be valid node ID (non-negative integer)"
+        },
+        "contractId": {
+          "type": "string",
+          "description": "The ID of the target contract.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "templateId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "Identifies the template that defines the executed choice.\nThis template's package-id may differ from the target contract's package-id\nif the target contract has been upgraded or downgraded.\n\nThe identifier uses the package-id reference format.\n\nRequired"
+        },
+        "interfaceId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "The interface where the choice is defined, if inherited.\nIf defined, the identifier uses the package-id reference format.\n\nOptional"
+        },
+        "choice": {
+          "type": "string",
+          "description": "The choice that was exercised on the target contract.\nMust be a valid NameString (as described in ``value.proto``).\n\nRequired"
+        },
+        "choiceArgument": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value",
+          "description": "The argument of the exercised choice.\n\nRequired"
+        },
+        "actingParties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The parties that exercised the choice.\nEach element must be a valid PartyIdString (as described in ``value.proto``).\n\nRequired: must be non-empty"
+        },
+        "consuming": {
+          "type": "boolean",
+          "description": "If true, the target contract may no longer be exercised.\n\nRequired"
+        },
+        "witnessParties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The parties that are notified of this event. The witnesses of an exercise\nnode will depend on whether the exercise was consuming or not.\nIf consuming, the witnesses are the union of the stakeholders,\nthe actors and all informees of all the ancestors of this event this\nparticipant knows about.\nIf not consuming, the witnesses are the union of the signatories,\nthe actors and all informees of all the ancestors of this event this\nparticipant knows about.\nIn both cases the witnesses are limited to the querying parties, or not\nlimited in case anyParty filters are used.\nNote that the actors might not necessarily be observers\nand thus stakeholders. This is the case when the controllers of a\nchoice are specified using \"flexible controllers\", using the\n``choice ... controller`` syntax, and said controllers are not\nexplicitly marked as observers.\nEach element must be a valid PartyIdString (as described in ``value.proto``).\n\nRequired: must be non-empty"
+        },
+        "lastDescendantNodeId": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Specifies the upper boundary of the node ids of the events in the same transaction that appeared as a result of\nthis ``ExercisedEvent``. This allows unambiguous identification of all the members of the subtree rooted at this\nnode. A full subtree can be constructed when all descendant nodes are present in the stream. If nodes are heavily\nfiltered, it is only possible to determine if a node is in a consequent subtree or not.\n\nRequired"
+        },
+        "exerciseResult": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value",
+          "description": "The result of exercising the choice.\n\nOptional"
+        },
+        "packageName": {
+          "type": "string",
+          "description": "The package name of the contract.\n\nRequired"
+        },
+        "implementedInterfaces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier"
+          },
+          "description": "If the event is consuming, the interfaces implemented by the target template that have been\nmatched from the interface filter query.\nPopulated only in case interface filters with include_interface_view set.\n\nThe identifier uses the package-id reference format.\n\nOptional: can be empty"
+        },
+        "acsDelta": {
+          "type": "boolean",
+          "description": "Whether this event would be part of respective ACS_DELTA shaped stream,\nand should therefore considered when tracking contract activeness on the client-side.\n\nRequired"
+        }
+      },
+      "description": "Records that a choice has been exercised on a target contract."
+    },
+    "com.daml.ledger.api.v2.Filters": {
+      "type": "object",
+      "properties": {
+        "cumulative": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.CumulativeFilter"
+          },
+          "description": "Every filter in the cumulative list expands the scope of the resulting stream. Each interface,\ntemplate or wildcard filter means additional events that will match the query.\nThe impact of include_interface_view and include_created_event_blob fields in the filters will\nalso be accumulated.\nA template or an interface SHOULD NOT appear twice in the accumulative field.\nA wildcard filter SHOULD NOT be defined more than once in the accumulative field.\nIf no ``CumulativeFilter`` defined, the default of a single ``WildcardFilter`` with\ninclude_created_event_blob unset is used.\n\nOptional: can be empty"
+        }
+      },
+      "description": "The union of a set of template filters, interface filters, or a wildcard."
+    },
+    "com.daml.ledger.api.v2.GenMap": {
+      "type": "object",
+      "properties": {
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.GenMap.Entry"
+          }
+        }
+      }
+    },
+    "com.daml.ledger.api.v2.GenMap.Entry": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value"
+        },
+        "value": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value"
+        }
+      }
+    },
+    "com.daml.ledger.api.v2.Identifier": {
+      "type": "object",
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "description": "Generally, the identifier of the Daml package that contains the entity.\nWhen encoding a package-id, it must be a valid PackageIdString.\n\nThe field is overloaded to also be able to contain the package-name of the Daml package.\nThis is supported if the entity referenced is either an interface or template.\nWhen representing the Daml package-name, the encoding is of form `#\u003cpackage-name\u003e`\nwhere `#` (not a valid package-id character)\nis used as a discriminator for signalling a package-name encoding.\n\nRequired"
+        },
+        "moduleName": {
+          "type": "string",
+          "title": "The dot-separated module name of the identifier.\nRequired"
+        },
+        "entityName": {
+          "type": "string",
+          "title": "The dot-separated name of the entity (e.g. record, template, ...) within the module.\nRequired"
+        }
+      },
+      "description": "- if a Daml package-id is encoded in the package_id field, it is referred to as using a \"package-id reference format\"\n  - if a Daml package-name is encoded in the package_id field, it is referred to as using a \"package-name reference format\"",
+      "title": "Unique identifier of an entity.\nThroughout this API, the following terminology is being used:"
+    },
+    "com.daml.ledger.api.v2.InterfaceFilter": {
+      "type": "object",
+      "properties": {
+        "interfaceId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "The interface that a matching contract must implement.\nThe ``interface_id`` needs to be valid: corresponding interface should be defined in\none of the available packages at the time of the query.\nBoth package-name and package-id reference formats for the identifier are supported.\nNote: The package-id reference identifier format is deprecated. We plan to end support for this format in version 3.4.\n\nRequired"
+        },
+        "includeInterfaceView": {
+          "type": "boolean",
+          "description": "Whether to include the interface view on the contract in the returned ``CreatedEvent``.\nUse this to access contract data in a uniform manner in your API client.\n\nOptional"
+        },
+        "includeCreatedEventBlob": {
+          "type": "boolean",
+          "description": "Whether to include a ``created_event_blob`` in the returned ``CreatedEvent``.\nUse this to access the contract create event payload in your API client\nfor submitting it as a disclosed contract with future commands.\n\nOptional"
+        }
+      },
+      "description": "This filter matches contracts that implement a specific interface."
+    },
+    "com.daml.ledger.api.v2.InterfaceView": {
+      "type": "object",
+      "properties": {
+        "interfaceId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "The interface implemented by the matched event.\nThe identifier uses the package-id reference format.\n\nRequired"
+        },
+        "viewStatus": {
+          "$ref": "#/definitions/google.rpc.Status",
+          "description": "Whether the view was successfully computed, and if not,\nthe reason for the error. The error is reported using the same rules\nfor error codes and messages as the errors returned for API requests.\n\nRequired"
+        },
+        "viewValue": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Record",
+          "description": "The value of the interface's view method on this event.\nSet if it was requested in the ``InterfaceFilter`` and it could be\nsuccessfully computed.\n\nOptional"
+        },
+        "implementationPackageId": {
+          "type": "string",
+          "description": "The package defining the interface implementation used to compute the view.\nCan be different from the package that was used to create the contract itself,\nas the contract arguments can be upgraded or downgraded using smart-contract upgrading\nas part of computing the interface view.\nPopulated if the view computation is successful, otherwise empty.\n\nOptional"
+        }
+      },
+      "description": "View of a create event matched by an interface filter."
+    },
+    "com.daml.ledger.api.v2.List": {
+      "type": "object",
+      "properties": {
+        "elements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.Value"
+          },
+          "title": "The elements must all be of the same concrete value type.\nOptional"
+        }
+      },
+      "description": "A homogenous collection of values."
+    },
+    "com.daml.ledger.api.v2.Optional": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value",
+          "title": "optional"
+        }
+      },
+      "description": "Corresponds to Java's Optional type, Scala's Option, and Haskell's Maybe.\nThe reason why we need to wrap this in an additional ``message`` is that we\nneed to be able to encode the ``None`` case in the ``Value`` oneof."
+    },
+    "com.daml.ledger.api.v2.PrefetchContractKey": {
+      "type": "object",
+      "properties": {
+        "templateId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "The template of contract the client wants to prefetch.\nBoth package-name and package-id reference identifier formats for the template-id are supported.\nNote: The package-id reference identifier format is deprecated. We plan to end support for this format in version 3.4.\n\nRequired"
+        },
+        "contractKey": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value",
+          "description": "The key of the contract the client wants to prefetch.\n\nRequired"
+        }
+      },
+      "title": "Preload contracts"
+    },
+    "com.daml.ledger.api.v2.Reassignment": {
+      "type": "object",
+      "properties": {
+        "updateId": {
+          "type": "string",
+          "description": "Assigned by the server. Useful for correlating logs.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "commandId": {
+          "type": "string",
+          "description": "The ID of the command which resulted in this reassignment. Missing for everyone except the submitting party on the submitting participant.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nOptional"
+        },
+        "workflowId": {
+          "type": "string",
+          "description": "The workflow ID used in reassignment command submission. Only set if the ``workflow_id`` for the command was set.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nOptional"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64",
+          "description": "The participant's offset. The details of this field are described in ``community/ledger-api/README.md``.\nMust be a valid absolute offset (positive integer).\n\nRequired"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.ReassignmentEvent"
+          },
+          "description": "The collection of reassignment events.\n\nRequired: must be non-empty"
+        },
+        "traceContext": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.TraceContext",
+          "description": "The trace context transported in this message corresponds to the trace context supplied\nby the client application in a HTTP2 header of the original command submission.\nWe typically use a header to transfer this type of information. Here we use message\nbody, because it is used in gRPC streams which do not support per message headers.\nThis field will be populated with the trace context contained in the original submission.\nIf that was not provided, a unique ledger-api-server generated trace context will be used\ninstead.\n\nOptional",
+          "title": "Ledger API trace context"
+        },
+        "recordTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which the reassignment was recorded. The record time refers to the source/target\nsynchronizer for an unassign/assign event respectively.\n\nRequired"
+        },
+        "synchronizerId": {
+          "type": "string",
+          "description": "A valid synchronizer id.\nIdentifies the synchronizer that synchronized this Reassignment.\n\nRequired"
+        },
+        "paidTrafficCost": {
+          "type": "string",
+          "format": "int64",
+          "description": "The traffic cost that this participant node paid for the corresponding (un)assignment request.\n\nNot set for transactions that were\n- initiated by another participant\n- initiated offline via the repair service\n- processed before the participant started serving traffic cost on the Ledger API\n- returned as part of a query filtering for a non submitting party\n\nOptional"
+        }
+      },
+      "description": "Complete view of an on-ledger reassignment."
+    },
+    "com.daml.ledger.api.v2.ReassignmentCommand": {
+      "type": "object",
+      "properties": {
+        "unassignCommand": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.UnassignCommand"
+        },
+        "assignCommand": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.AssignCommand"
+        }
+      }
+    },
+    "com.daml.ledger.api.v2.ReassignmentCommands": {
+      "type": "object",
+      "properties": {
+        "workflowId": {
+          "type": "string",
+          "description": "Identifier of the on-ledger workflow that this command is a part of.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nOptional"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Uniquely identifies the participant user that issued the command.\nMust be a valid UserIdString (as described in ``value.proto``).\nRequired unless authentication is used with a user token.\nIn that case, the token's user-id will be used for the request's user_id.\n\nOptional"
+        },
+        "commandId": {
+          "type": "string",
+          "description": "Uniquely identifies the command.\nThe triple (user_id, submitter, command_id) constitutes the change ID for the intended ledger change.\nThe change ID can be used for matching the intended ledger changes with all their completions.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "submitter": {
+          "type": "string",
+          "description": "Party on whose behalf the command should be executed.\nIf ledger API authorization is enabled, then the authorization metadata must authorize the sender of the request\nto act on behalf of the given party.\nMust be a valid PartyIdString (as described in ``value.proto``).\n\nRequired"
+        },
+        "submissionId": {
+          "type": "string",
+          "description": "A unique identifier to distinguish completions for different submissions with the same change ID.\nTypically a random UUID. Applications are expected to use a different UUID for each retry of a submission\nwith the same change ID.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nIf omitted, the participant or the committer may set a value of their choice.\n\nOptional"
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.ReassignmentCommand"
+          },
+          "description": "Individual elements of this reassignment. Must be non-empty.\n\nRequired: must be non-empty"
+        }
+      }
+    },
+    "com.daml.ledger.api.v2.ReassignmentEvent": {
+      "type": "object",
+      "properties": {
+        "unassigned": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.UnassignedEvent"
+        },
+        "assigned": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.AssignedEvent"
+        }
+      }
+    },
+    "com.daml.ledger.api.v2.Record": {
+      "type": "object",
+      "properties": {
+        "recordId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "Omitted from the transaction stream when verbose streaming is not enabled.\nOptional when submitting commands."
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.RecordField"
+          },
+          "title": "The nested values of the record.\nRequired"
+        }
+      },
+      "description": "Contains nested values."
+    },
+    "com.daml.ledger.api.v2.RecordField": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "- if all keys within a single record are present, the order in which fields appear does not matter. however, each key must appear exactly once.\n- if any of the keys within a single record are omitted, the order of fields MUST match the order of declaration in the Daml template.\n\nMust be a valid NameString",
+          "title": "When reading a transaction stream, it's omitted if verbose streaming is not enabled.\nWhen submitting a command, it's optional:"
+        },
+        "value": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value",
+          "title": "A nested value of a record.\nRequired"
+        }
+      },
+      "description": "A named nested value within a record."
+    },
+    "com.daml.ledger.api.v2.SubmitAndWaitForReassignmentRequest": {
+      "type": "object",
+      "properties": {
+        "reassignmentCommands": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.ReassignmentCommands",
+          "description": "The reassignment commands to be submitted.\n\nRequired"
+        },
+        "eventFormat": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.EventFormat",
+          "description": "If no event_format provided, the result will contain no events.\nThe events in the result, will take shape TRANSACTION_SHAPE_ACS_DELTA.\n\nOptional"
+        }
+      },
+      "description": "This reassignment is executed as a single atomic update."
+    },
+    "com.daml.ledger.api.v2.SubmitAndWaitForReassignmentResponse": {
+      "type": "object",
+      "properties": {
+        "reassignment": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Reassignment",
+          "description": "The reassignment that resulted from the submitted reassignment command.\nThe reassignment might contain no events (request conditions result in filtering out all of them).\n\nRequired"
+        }
+      }
+    },
+    "com.daml.ledger.api.v2.SubmitAndWaitForTransactionRequest": {
+      "type": "object",
+      "properties": {
+        "commands": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Commands",
+          "description": "The commands to be submitted.\n\nRequired"
+        },
+        "transactionFormat": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.TransactionFormat",
+          "description": "If no ``transaction_format`` is provided, a default will be used where ``transaction_shape`` is set to\nTRANSACTION_SHAPE_ACS_DELTA, ``event_format`` is defined with ``filters_by_party`` containing wildcard-template\nfilter for all original ``act_as`` and ``read_as`` parties and the ``verbose`` flag is set.\n\nOptional"
+        }
+      },
+      "description": "These commands are executed as a single atomic transaction."
+    },
+    "com.daml.ledger.api.v2.SubmitAndWaitForTransactionResponse": {
+      "type": "object",
+      "properties": {
+        "transaction": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Transaction",
+          "description": "The transaction that resulted from the submitted command.\nThe transaction might contain no events (request conditions result in filtering out all of them).\n\nRequired"
+        }
+      }
+    },
+    "com.daml.ledger.api.v2.SubmitAndWaitResponse": {
+      "type": "object",
+      "properties": {
+        "updateId": {
+          "type": "string",
+          "description": "The id of the transaction that resulted from the submitted command.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "completionOffset": {
+          "type": "string",
+          "format": "int64",
+          "description": "The details of the offset field are described in ``community/ledger-api/README.md``.\n\nRequired"
+        }
+      }
+    },
+    "com.daml.ledger.api.v2.TemplateFilter": {
+      "type": "object",
+      "properties": {
+        "templateId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "A template for which the payload should be included in the response.\nThe ``template_id`` needs to be valid: corresponding template should be defined in\none of the available packages at the time of the query.\nBoth package-name and package-id reference formats for the identifier are supported.\nNote: The package-id reference identifier format is deprecated. We plan to end support for this format in version 3.4.\n\nRequired"
+        },
+        "includeCreatedEventBlob": {
+          "type": "boolean",
+          "description": "Whether to include a ``created_event_blob`` in the returned ``CreatedEvent``.\nUse this to access the contract event payload in your API client\nfor submitting it as a disclosed contract with future commands.\n\nOptional"
+        }
+      },
+      "description": "This filter matches contracts of a specific template."
+    },
+    "com.daml.ledger.api.v2.TextMap": {
+      "type": "object",
+      "properties": {
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.TextMap.Entry"
+          }
+        }
+      }
+    },
+    "com.daml.ledger.api.v2.TextMap.Entry": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value"
+        }
+      }
+    },
+    "com.daml.ledger.api.v2.TraceContext": {
+      "type": "object",
+      "properties": {
+        "traceparent": {
+          "type": "string",
+          "description": "Optional",
+          "title": "https://www.w3.org/TR/trace-context/"
+        },
+        "tracestate": {
+          "type": "string",
+          "title": "Optional"
+        }
+      }
+    },
+    "com.daml.ledger.api.v2.Transaction": {
+      "type": "object",
+      "properties": {
+        "updateId": {
+          "type": "string",
+          "description": "Assigned by the server. Useful for correlating logs.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "commandId": {
+          "type": "string",
+          "description": "The ID of the command which resulted in this transaction. Missing for everyone except the submitting party.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nOptional"
+        },
+        "workflowId": {
+          "type": "string",
+          "description": "The workflow ID used in command submission.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nOptional"
+        },
+        "effectiveAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Ledger effective time.\n\nRequired"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/com.daml.ledger.api.v2.Event"
+          },
+          "description": "- ``CreatedEvent`` or ``ArchivedEvent`` in case of ACS_DELTA transaction shape\n- ``CreatedEvent`` or ``ExercisedEvent`` in case of LEDGER_EFFECTS transaction shape\n\nRequired: must be non-empty",
+          "title": "The collection of events.\nContains:"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64",
+          "description": "The absolute offset. The details of this field are described in ``community/ledger-api/README.md``.\nIt is a valid absolute offset (positive integer).\n\nRequired"
+        },
+        "synchronizerId": {
+          "type": "string",
+          "description": "A valid synchronizer id.\nIdentifies the synchronizer that synchronized the transaction.\n\nRequired"
+        },
+        "traceContext": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.TraceContext",
+          "description": "The trace context transported in this message corresponds to the trace context supplied\nby the client application in a HTTP2 header of the original command submission.\nWe typically use a header to transfer this type of information. Here we use message\nbody, because it is used in gRPC streams which do not support per message headers.\nThis field will be populated with the trace context contained in the original submission.\nIf that was not provided, a unique ledger-api-server generated trace context will be used\ninstead.\n\nOptional",
+          "title": "Ledger API trace context"
+        },
+        "recordTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which the transaction was recorded. The record time refers to the synchronizer\nwhich synchronized the transaction.\n\nRequired"
+        },
+        "externalTransactionHash": {
+          "type": "string",
+          "format": "byte",
+          "description": "For transaction externally signed, contains the external transaction hash\nsigned by the external party. Can be used to correlate an external submission with a committed transaction.\n\nOptional: can be empty"
+        },
+        "paidTrafficCost": {
+          "type": "string",
+          "format": "int64",
+          "description": "The traffic cost that this participant node paid for the confirmation\nrequest for this transaction.\n\nNot set for transactions that were\n- initiated by another participant\n- initiated offline via the repair service\n- processed before the participant started serving traffic cost on the Ledger API\n- returned as part of a query filtering for a non submitting party\n\nOptional"
+        }
+      },
+      "description": "Filtered view of an on-ledger transaction's create and archive events."
+    },
+    "com.daml.ledger.api.v2.TransactionFormat": {
+      "type": "object",
+      "properties": {
+        "eventFormat": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.EventFormat",
+          "title": "Required"
+        },
+        "transactionShape": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.TransactionShape",
+          "description": "What transaction shape to use for interpreting the filters of the event format.\n\nRequired"
+        }
+      },
+      "description": "A format that specifies what events to include in Daml transactions\nand what data to compute and include for them."
+    },
+    "com.daml.ledger.api.v2.TransactionShape": {
+      "type": "string",
+      "enum": [
+        "TRANSACTION_SHAPE_UNSPECIFIED",
+        "TRANSACTION_SHAPE_ACS_DELTA",
+        "TRANSACTION_SHAPE_LEDGER_EFFECTS"
+      ],
+      "default": "TRANSACTION_SHAPE_UNSPECIFIED",
+      "description": "Event shape for Transactions.\nShapes are exclusive and only one of them can be defined in queries.\n\n - TRANSACTION_SHAPE_UNSPECIFIED: Following official proto3 convention, not intended for actual use.\n - TRANSACTION_SHAPE_ACS_DELTA: Transaction shape that is sufficient to maintain an accurate ACS view.\nThe field witness_parties in events are populated as stakeholders, transaction filter will apply accordingly.\nThis translates to create and archive events.\n - TRANSACTION_SHAPE_LEDGER_EFFECTS: Transaction shape that allows maintaining an ACS and also conveys detailed information about\nall exercises.\nThe field witness_parties in events are populated as cumulative informees, transaction filter will apply accordingly.\nThis translates to create, consuming exercise and non-consuming exercise."
+    },
+    "com.daml.ledger.api.v2.UnassignCommand": {
+      "type": "object",
+      "properties": {
+        "contractId": {
+          "type": "string",
+          "description": "The ID of the contract the client wants to unassign.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "source": {
+          "type": "string",
+          "description": "Required",
+          "title": "The ID of the source synchronizer\nMust be a valid synchronizer id"
+        },
+        "target": {
+          "type": "string",
+          "description": "Required",
+          "title": "The ID of the target synchronizer\nMust be a valid synchronizer id"
+        }
+      },
+      "title": "Unassign a contract"
+    },
+    "com.daml.ledger.api.v2.UnassignedEvent": {
+      "type": "object",
+      "properties": {
+        "reassignmentId": {
+          "type": "string",
+          "description": "The ID of the unassignment. This needs to be used as an input for a assign ReassignmentCommand.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "contractId": {
+          "type": "string",
+          "description": "The ID of the reassigned contract.\nMust be a valid LedgerString (as described in ``value.proto``).\n\nRequired"
+        },
+        "templateId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "The template of the reassigned contract.\nThe identifier uses the package-id reference format.\n\nRequired"
+        },
+        "source": {
+          "type": "string",
+          "description": "Required",
+          "title": "The ID of the source synchronizer\nMust be a valid synchronizer id"
+        },
+        "target": {
+          "type": "string",
+          "description": "Required",
+          "title": "The ID of the target synchronizer\nMust be a valid synchronizer id"
+        },
+        "submitter": {
+          "type": "string",
+          "description": "Party on whose behalf the unassign command was executed.\nEmpty if the unassignment happened offline via the repair service.\nMust be a valid PartyIdString (as described in ``value.proto``).\n\nOptional"
+        },
+        "reassignmentCounter": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Each corresponding assigned and unassigned event has the same reassignment_counter. This strictly increases\nwith each unassign command for the same contract. Creation of the contract corresponds to reassignment_counter\nequals zero.\n\nRequired"
+        },
+        "assignmentExclusivity": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Assignment exclusivity\nBefore this time (measured on the target synchronizer), only the submitter of the unassignment can initiate the assignment\nDefined for reassigning participants.\n\nOptional"
+        },
+        "witnessParties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The parties that are notified of this event.\n\nRequired: must be non-empty"
+        },
+        "packageName": {
+          "type": "string",
+          "description": "The package name of the contract.\n\nRequired"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64",
+          "description": "Required",
+          "title": "The offset of origin.\nOffsets are managed by the participant nodes.\nReassignments can thus NOT be assumed to have the same offsets on different participant nodes.\nMust be a valid absolute offset (positive integer)"
+        },
+        "nodeId": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Required",
+          "title": "The position of this event in the originating reassignment.\nNode IDs are not necessarily equal across participants,\nas these may see different projections/parts of reassignments.\nMust be valid node ID (non-negative integer)"
+        }
+      },
+      "title": "Records that a contract has been unassigned, and it becomes unusable on the source synchronizer"
+    },
+    "com.daml.ledger.api.v2.Value": {
+      "type": "object",
+      "properties": {
+        "unit": {
+          "type": "object",
+          "properties": {},
+          "description": "This value is used for example for choices that don't take any arguments."
+        },
+        "bool": {
+          "type": "boolean",
+          "description": "True or false."
+        },
+        "int64": {
+          "type": "string",
+          "format": "int64"
+        },
+        "date": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Days since the unix epoch. Can go backwards. Limited from\n0001-01-01 to 9999-12-31, also to be compatible with\nhttps://www.ietf.org/rfc/rfc3339.txt"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "int64",
+          "title": "Microseconds since the UNIX epoch. Can go backwards. Fixed\nsince the vast majority of values will be greater than\n2^28, since currently the number of microseconds since the\nepoch is greater than that. Range: 0001-01-01T00:00:00Z to\n9999-12-31T23:59:59.999999Z, so that we can convert to/from\nhttps://www.ietf.org/rfc/rfc3339.txt"
+        },
+        "numeric": {
+          "type": "string",
+          "description": ".. code-block:: none\n\n  [+-]?\\d{1,38}(.\\d{0,37})?\n\nand should be representable by a Numeric without loss of precision.",
+          "title": "A Numeric, that is a decimal value with precision 38 (at most 38 significant digits) and a\nscale between 0 and 37 (significant digits on the right of the decimal point).\nThe field has to match the regex"
+        },
+        "party": {
+          "type": "string",
+          "description": "An agent operating on the ledger.\nMust be a valid PartyIdString."
+        },
+        "text": {
+          "type": "string",
+          "description": "A string."
+        },
+        "contractId": {
+          "type": "string",
+          "description": "Identifier of an on-ledger contract. Commands which reference an unknown or already archived contract ID will fail.\nMust be a valid LedgerString."
+        },
+        "optional": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Optional",
+          "title": "The Optional type, None or Some"
+        },
+        "list": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.List",
+          "description": "Represents a homogeneous list of values."
+        },
+        "textMap": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.TextMap",
+          "title": "The TextMap type"
+        },
+        "genMap": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.GenMap",
+          "title": "The GenMap type"
+        },
+        "record": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Record"
+        },
+        "variant": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Variant"
+        },
+        "enum": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Enum",
+          "title": "The Enum type"
+        }
+      },
+      "description": "Encodes values that the ledger accepts as command arguments and emits as contract arguments.\n\nThe values encoding use different classes of non-empty strings as identifiers. Those classes are\ndefined as follows:\n\n- NameStrings are strings with length \u003c= 1000 that match the regexp ``[A-Za-z\\$_][A-Za-z0-9\\$_]*``.\n- PackageIdStrings are strings with length \u003c= 64 that match the regexp ``[A-Za-z0-9\\-_ ]+``.\n- PartyIdStrings are strings with length \u003c= 255 that match the regexp ``[A-Za-z0-9:\\-_ ]+``.\n- ParticipantIdStrings are strings with length \u003c= 255 that match the regexp ``[A-Za-z0-9:\\-_ ]+``.\n- LedgerStrings are strings with length \u003c= 255 that match the regexp ``[A-Za-z0-9#:\\-_/ ]+``.\n- UserIdStrings are strings with length \u003c= 128 that match the regexp ``[a-zA-Z0-9@^$.!`\\-#+'~_|:]+``."
+    },
+    "com.daml.ledger.api.v2.Variant": {
+      "type": "object",
+      "properties": {
+        "variantId": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Identifier",
+          "description": "Omitted from the transaction stream when verbose streaming is not enabled.\nOptional when submitting commands."
+        },
+        "constructor": {
+          "type": "string",
+          "title": "Determines which of the Variant's alternatives is encoded in this message.\nMust be a valid NameString.\nRequired"
+        },
+        "value": {
+          "$ref": "#/definitions/com.daml.ledger.api.v2.Value",
+          "title": "The value encoded within the Variant.\nRequired"
+        }
+      },
+      "description": "A value with alternative representations."
+    },
+    "com.daml.ledger.api.v2.WildcardFilter": {
+      "type": "object",
+      "properties": {
+        "includeCreatedEventBlob": {
+          "type": "boolean",
+          "description": "Whether to include a ``created_event_blob`` in the returned ``CreatedEvent``.\nUse this to access the contract create event payload in your API client\nfor submitting it as a disclosed contract with future commands.\n\nOptional"
+        }
+      },
+      "description": "This filter matches all templates."
+    },
+    "google.protobuf.Any": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "description": "A URL/resource name that uniquely identifies the type of the serialized\nprotocol buffer message. This string must contain at least\none \"/\" character. The last segment of the URL's path must represent\nthe fully qualified name of the type (as in\n`path/google.protobuf.Duration`). The name should be in a canonical form\n(e.g., leading \".\" is not accepted).\n\nIn practice, teams usually precompile into the binary all types that they\nexpect it to use in the context of Any. However, for URLs which use the\nscheme `http`, `https`, or no scheme, one can optionally set up a type\nserver that maps type URLs to message definitions as follows:\n\n* If no scheme is provided, `https` is assumed.\n* An HTTP GET on the URL must yield a [google.protobuf.Type][]\n  value in binary format, or produce an error.\n* Applications are allowed to cache lookup results based on the\n  URL, or have them precompiled into a binary to avoid any\n  lookup. Therefore, binary compatibility needs to be preserved\n  on changes to types. (Use versioned type names to manage\n  breaking changes.)\n\nNote: this functionality is not currently available in the official\nprotobuf release, and it is not used for type URLs beginning with\ntype.googleapis.com. As of May 2023, there are no widely used type server\nimplementations and no plans to implement one.\n\nSchemes other than `http`, `https` (or the empty scheme) might be\nused with implementation specific semantics."
+        }
+      },
+      "additionalProperties": {},
+      "description": "`Any` contains an arbitrary serialized protocol buffer message along with a\nURL that describes the type of the serialized message.\n\nProtobuf library provides support to pack/unpack Any values in the form\nof utility functions or additional generated methods of the Any type.\n\nExample 1: Pack and unpack a message in C++.\n\n    Foo foo = ...;\n    Any any;\n    any.PackFrom(foo);\n    ...\n    if (any.UnpackTo(\u0026foo)) {\n      ...\n    }\n\nExample 2: Pack and unpack a message in Java.\n\n    Foo foo = ...;\n    Any any = Any.pack(foo);\n    ...\n    if (any.is(Foo.class)) {\n      foo = any.unpack(Foo.class);\n    }\n    // or ...\n    if (any.isSameTypeAs(Foo.getDefaultInstance())) {\n      foo = any.unpack(Foo.getDefaultInstance());\n    }\n\n Example 3: Pack and unpack a message in Python.\n\n    foo = Foo(...)\n    any = Any()\n    any.Pack(foo)\n    ...\n    if any.Is(Foo.DESCRIPTOR):\n      any.Unpack(foo)\n      ...\n\n Example 4: Pack and unpack a message in Go\n\n     foo := \u0026pb.Foo{...}\n     any, err := anypb.New(foo)\n     if err != nil {\n       ...\n     }\n     ...\n     foo := \u0026pb.Foo{}\n     if err := any.UnmarshalTo(foo); err != nil {\n       ...\n     }\n\nThe pack methods provided by protobuf library will by default use\n'type.googleapis.com/full.type.name' as the type URL and the unpack\nmethods only use the fully qualified type name after the last '/'\nin the type URL, for example \"foo.bar.com/x/y.z\" will yield type\nname \"y.z\".\n\nJSON\n====\nThe JSON representation of an `Any` value uses the regular\nrepresentation of the deserialized, embedded message, with an\nadditional field `@type` which contains the type URL. Example:\n\n    package google.profile;\n    message Person {\n      string first_name = 1;\n      string last_name = 2;\n    }\n\n    {\n      \"@type\": \"type.googleapis.com/google.profile.Person\",\n      \"firstName\": \u003cstring\u003e,\n      \"lastName\": \u003cstring\u003e\n    }\n\nIf the embedded message type is well-known and has a custom JSON\nrepresentation, that representation will be embedded adding a field\n`value` which holds the custom JSON in addition to the `@type`\nfield. Example (for message [google.protobuf.Duration][]):\n\n    {\n      \"@type\": \"type.googleapis.com/google.protobuf.Duration\",\n      \"value\": \"1.212s\"\n    }"
+    },
+    "google.rpc.Status": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The status code, which should be an enum value of\n[google.rpc.Code][google.rpc.Code]."
+        },
+        "message": {
+          "type": "string",
+          "description": "A developer-facing error message, which should be in English. Any\nuser-facing error message should be localized and sent in the\n[google.rpc.Status.details][google.rpc.Status.details] field, or localized\nby the client."
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/google.protobuf.Any"
+          },
+          "description": "A list of messages that carry the error details.  There is a common set of\nmessage types for APIs to use."
+        }
+      },
+      "description": "The `Status` type defines a logical error model that is suitable for\ndifferent programming environments, including REST APIs and RPC APIs. It is\nused by [gRPC](https://github.com/grpc). Each `Status` message contains\nthree pieces of data: error code, error message, and error details.\n\nYou can find out more about this error model and how to work with it in the\n[API Design Guide](https://cloud.google.com/apis/design/errors)."
+    }
+  }
+}

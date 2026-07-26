@@ -1,0 +1,9 @@
+  /v2/authenticated-user
+  /v2/commands/submit-and-wait-for-transaction-tree
+  /v2/package-vetting
+  /v2/updates/flats
+  /v2/updates/transaction-by-id
+  /v2/updates/transaction-by-offset
+  /v2/updates/transaction-tree-by-id/{update-id}
+  /v2/updates/transaction-tree-by-offset/{offset}
+  /v2/updates/trees
