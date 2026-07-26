@@ -1,0 +1,11 @@
+version: v2
+plugins:
+  - remote: buf.build/grpc-ecosystem/openapiv2:v2.28.0
+    out: gen
+    opt:
+      - allow_delete_body=true
+      - json_names_for_fields=true
+      - openapi_naming_strategy=fqn
+      - allow_merge=true
+      - merge_file_name=canton-ledger-api
+      - output_format=yaml

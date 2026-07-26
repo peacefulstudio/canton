@@ -1,0 +1,899 @@
+name: "com/daml/ledger/api/v2/version_service.proto"
+package: "com.daml.ledger.api.v2"
+dependency: "com/daml/ledger/api/v2/experimental_features.proto"
+dependency: "google/protobuf/duration.proto"
+message_type {
+  name: "GetLedgerApiVersionRequest"
+}
+message_type {
+  name: "GetLedgerApiVersionResponse"
+  field {
+    name: "version"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "version"
+  }
+  field {
+    name: "features"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".com.daml.ledger.api.v2.FeaturesDescriptor"
+    json_name: "features"
+  }
+}
+message_type {
+  name: "FeaturesDescriptor"
+  field {
+    name: "experimental"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".com.daml.ledger.api.v2.ExperimentalFeatures"
+    json_name: "experimental"
+  }
+  field {
+    name: "user_management"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".com.daml.ledger.api.v2.UserManagementFeature"
+    json_name: "userManagement"
+  }
+  field {
+    name: "party_management"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".com.daml.ledger.api.v2.PartyManagementFeature"
+    json_name: "partyManagement"
+  }
+  field {
+    name: "offset_checkpoint"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".com.daml.ledger.api.v2.OffsetCheckpointFeature"
+    json_name: "offsetCheckpoint"
+  }
+  field {
+    name: "package_feature"
+    number: 5
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".com.daml.ledger.api.v2.PackageFeature"
+    json_name: "packageFeature"
+  }
+}
+message_type {
+  name: "UserManagementFeature"
+  field {
+    name: "supported"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "supported"
+  }
+  field {
+    name: "max_rights_per_user"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+    json_name: "maxRightsPerUser"
+  }
+  field {
+    name: "max_users_page_size"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+    json_name: "maxUsersPageSize"
+  }
+}
+message_type {
+  name: "PartyManagementFeature"
+  field {
+    name: "max_parties_page_size"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+    json_name: "maxPartiesPageSize"
+  }
+}
+message_type {
+  name: "PackageFeature"
+  field {
+    name: "max_vetted_packages_page_size"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+    json_name: "maxVettedPackagesPageSize"
+  }
+}
+message_type {
+  name: "OffsetCheckpointFeature"
+  field {
+    name: "max_offset_checkpoint_emission_delay"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".google.protobuf.Duration"
+    json_name: "maxOffsetCheckpointEmissionDelay"
+  }
+}
+service {
+  name: "VersionService"
+  method {
+    name: "GetLedgerApiVersion"
+    input_type: ".com.daml.ledger.api.v2.GetLedgerApiVersionRequest"
+    output_type: ".com.daml.ledger.api.v2.GetLedgerApiVersionResponse"
+  }
+}
+options {
+  java_package: "com.daml.ledger.api.v2"
+  java_outer_classname: "VersionServiceOuterClass"
+  csharp_namespace: "Com.Daml.Ledger.Api.V2"
+}
+source_code_info {
+  location {
+    span: 3
+    span: 0
+    span: 119
+    span: 1
+  }
+  location {
+    path: 12
+    span: 3
+    span: 0
+    span: 18
+    leading_detached_comments: " Copyright (c) 2026 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.\n SPDX-License-Identifier: Apache-2.0\n"
+  }
+  location {
+    path: 2
+    span: 5
+    span: 0
+    span: 31
+  }
+  location {
+    path: 3
+    path: 0
+    span: 7
+    span: 0
+    span: 60
+  }
+  location {
+    path: 3
+    path: 1
+    span: 8
+    span: 0
+    span: 40
+  }
+  location {
+    path: 8
+    span: 10
+    span: 0
+    span: 51
+  }
+  location {
+    path: 8
+    path: 37
+    span: 10
+    span: 0
+    span: 51
+  }
+  location {
+    path: 8
+    span: 11
+    span: 0
+    span: 57
+  }
+  location {
+    path: 8
+    path: 8
+    span: 11
+    span: 0
+    span: 57
+  }
+  location {
+    path: 8
+    span: 12
+    span: 0
+    span: 47
+  }
+  location {
+    path: 8
+    path: 1
+    span: 12
+    span: 0
+    span: 47
+  }
+  location {
+    path: 6
+    path: 0
+    span: 15
+    span: 0
+    span: 18
+    span: 1
+    leading_comments: " Allows clients to retrieve information about the ledger API version\n"
+  }
+  location {
+    path: 6
+    path: 0
+    path: 1
+    span: 15
+    span: 8
+    span: 22
+  }
+  location {
+    path: 6
+    path: 0
+    path: 2
+    path: 0
+    span: 17
+    span: 2
+    span: 92
+    leading_comments: " Read the Ledger API version\n"
+  }
+  location {
+    path: 6
+    path: 0
+    path: 2
+    path: 0
+    path: 1
+    span: 17
+    span: 6
+    span: 25
+  }
+  location {
+    path: 6
+    path: 0
+    path: 2
+    path: 0
+    path: 2
+    span: 17
+    span: 26
+    span: 52
+  }
+  location {
+    path: 6
+    path: 0
+    path: 2
+    path: 0
+    path: 3
+    span: 17
+    span: 63
+    span: 90
+  }
+  location {
+    path: 4
+    path: 0
+    span: 20
+    span: 0
+    span: 37
+  }
+  location {
+    path: 4
+    path: 0
+    path: 1
+    span: 20
+    span: 8
+    span: 34
+  }
+  location {
+    path: 4
+    path: 1
+    span: 22
+    span: 0
+    span: 40
+    span: 1
+  }
+  location {
+    path: 4
+    path: 1
+    path: 1
+    span: 22
+    span: 8
+    span: 35
+  }
+  location {
+    path: 4
+    path: 1
+    path: 2
+    path: 0
+    path: 5
+    span: 26
+    span: 2
+    span: 8
+  }
+  location {
+    path: 4
+    path: 1
+    path: 2
+    path: 0
+    span: 26
+    span: 2
+    span: 21
+    leading_comments: " The version of the ledger API.\n\n Required\n"
+  }
+  location {
+    path: 4
+    path: 1
+    path: 2
+    path: 0
+    path: 1
+    span: 26
+    span: 9
+    span: 16
+  }
+  location {
+    path: 4
+    path: 1
+    path: 2
+    path: 0
+    path: 3
+    span: 26
+    span: 19
+    span: 20
+  }
+  location {
+    path: 4
+    path: 1
+    path: 2
+    path: 1
+    path: 6
+    span: 39
+    span: 2
+    span: 20
+  }
+  location {
+    path: 4
+    path: 1
+    path: 2
+    path: 1
+    span: 39
+    span: 2
+    span: 34
+    leading_comments: " The features supported by this Ledger API endpoint.\n\n Daml applications CAN use the feature descriptor on top of\n version constraints on the Ledger API version to determine\n whether a given Ledger API endpoint supports the features\n required to run the application.\n\n See the feature descriptions themselves for the relation between\n Ledger API versions and feature presence.\n\n Required\n"
+  }
+  location {
+    path: 4
+    path: 1
+    path: 2
+    path: 1
+    path: 1
+    span: 39
+    span: 21
+    span: 29
+  }
+  location {
+    path: 4
+    path: 1
+    path: 2
+    path: 1
+    path: 3
+    span: 39
+    span: 32
+    span: 33
+  }
+  location {
+    path: 4
+    path: 2
+    span: 42
+    span: 0
+    span: 76
+    span: 1
+  }
+  location {
+    path: 4
+    path: 2
+    path: 1
+    span: 42
+    span: 8
+    span: 26
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 0
+    path: 6
+    span: 49
+    span: 2
+    span: 22
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 0
+    span: 49
+    span: 2
+    span: 40
+    leading_comments: " Features under development or features that are used\n for ledger implementation testing purposes only.\n\n Daml applications SHOULD not depend on these in production.\n\n Required\n"
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 0
+    path: 1
+    span: 49
+    span: 23
+    span: 35
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 0
+    path: 3
+    span: 49
+    span: 38
+    span: 39
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 1
+    path: 6
+    span: 56
+    span: 2
+    span: 23
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 1
+    span: 56
+    span: 2
+    span: 44
+    leading_comments: " If set, then the Ledger API server supports user management.\n It is recommended that clients query this field to gracefully adjust their behavior for\n ledgers that do not support user management.\n\n Required\n"
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 1
+    path: 1
+    span: 56
+    span: 24
+    span: 39
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 1
+    path: 3
+    span: 56
+    span: 42
+    span: 43
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 2
+    path: 6
+    span: 63
+    span: 2
+    span: 24
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 2
+    span: 63
+    span: 2
+    span: 46
+    leading_comments: " If set, then the Ledger API server supports party management configurability.\n It is recommended that clients query this field to gracefully adjust their behavior to\n maximum party page size.\n\n Required\n"
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 2
+    path: 1
+    span: 63
+    span: 25
+    span: 41
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 2
+    path: 3
+    span: 63
+    span: 44
+    span: 45
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 3
+    path: 6
+    span: 68
+    span: 2
+    span: 25
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 3
+    span: 68
+    span: 2
+    span: 48
+    leading_comments: " It contains the timeouts related to the periodic offset checkpoint emission\n\n Required\n"
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 3
+    path: 1
+    span: 68
+    span: 26
+    span: 43
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 3
+    path: 3
+    span: 68
+    span: 46
+    span: 47
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 4
+    path: 6
+    span: 75
+    span: 2
+    span: 16
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 4
+    span: 75
+    span: 2
+    span: 37
+    leading_comments: " If set, then the Ledger API server supports package listing\n configurability. It is recommended that clients query this field to\n gracefully adjust their behavior to maximum package listing page size.\n\n Required\n"
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 4
+    path: 1
+    span: 75
+    span: 17
+    span: 32
+  }
+  location {
+    path: 4
+    path: 2
+    path: 2
+    path: 4
+    path: 3
+    span: 75
+    span: 35
+    span: 36
+  }
+  location {
+    path: 4
+    path: 3
+    span: 78
+    span: 0
+    span: 97
+    span: 1
+  }
+  location {
+    path: 4
+    path: 3
+    path: 1
+    span: 78
+    span: 8
+    span: 29
+  }
+  location {
+    path: 4
+    path: 3
+    path: 2
+    path: 0
+    path: 5
+    span: 82
+    span: 2
+    span: 6
+  }
+  location {
+    path: 4
+    path: 3
+    path: 2
+    path: 0
+    span: 82
+    span: 2
+    span: 21
+    leading_comments: " Whether the Ledger API server provides the user management service.\n\n Required\n"
+  }
+  location {
+    path: 4
+    path: 3
+    path: 2
+    path: 0
+    path: 1
+    span: 82
+    span: 7
+    span: 16
+  }
+  location {
+    path: 4
+    path: 3
+    path: 2
+    path: 0
+    path: 3
+    span: 82
+    span: 19
+    span: 20
+  }
+  location {
+    path: 4
+    path: 3
+    path: 2
+    path: 1
+    path: 5
+    span: 89
+    span: 2
+    span: 7
+  }
+  location {
+    path: 4
+    path: 3
+    path: 2
+    path: 1
+    span: 89
+    span: 2
+    span: 32
+    leading_comments: " The maximum number of rights that can be assigned to a single user.\n Servers MUST support at least 100 rights per user.\n A value of 0 means that the server enforces no rights per user limit.\n\n Required\n"
+  }
+  location {
+    path: 4
+    path: 3
+    path: 2
+    path: 1
+    path: 1
+    span: 89
+    span: 8
+    span: 27
+  }
+  location {
+    path: 4
+    path: 3
+    path: 2
+    path: 1
+    path: 3
+    span: 89
+    span: 30
+    span: 31
+  }
+  location {
+    path: 4
+    path: 3
+    path: 2
+    path: 2
+    path: 5
+    span: 96
+    span: 2
+    span: 7
+  }
+  location {
+    path: 4
+    path: 3
+    path: 2
+    path: 2
+    span: 96
+    span: 2
+    span: 32
+    leading_comments: " The maximum number of users the server can return in a single response (page).\n Servers MUST support at least a 100 users per page.\n A value of 0 means that the server enforces no page size limit.\n\n Required\n"
+  }
+  location {
+    path: 4
+    path: 3
+    path: 2
+    path: 2
+    path: 1
+    span: 96
+    span: 8
+    span: 27
+  }
+  location {
+    path: 4
+    path: 3
+    path: 2
+    path: 2
+    path: 3
+    span: 96
+    span: 30
+    span: 31
+  }
+  location {
+    path: 4
+    path: 4
+    span: 99
+    span: 0
+    span: 104
+    span: 1
+  }
+  location {
+    path: 4
+    path: 4
+    path: 1
+    span: 99
+    span: 8
+    span: 30
+  }
+  location {
+    path: 4
+    path: 4
+    path: 2
+    path: 0
+    path: 5
+    span: 103
+    span: 2
+    span: 7
+  }
+  location {
+    path: 4
+    path: 4
+    path: 2
+    path: 0
+    span: 103
+    span: 2
+    span: 34
+    leading_comments: " The maximum number of parties the server can return in a single response (page).\n\n Required\n"
+  }
+  location {
+    path: 4
+    path: 4
+    path: 2
+    path: 0
+    path: 1
+    span: 103
+    span: 8
+    span: 29
+  }
+  location {
+    path: 4
+    path: 4
+    path: 2
+    path: 0
+    path: 3
+    span: 103
+    span: 32
+    span: 33
+  }
+  location {
+    path: 4
+    path: 5
+    span: 106
+    span: 0
+    span: 112
+    span: 1
+  }
+  location {
+    path: 4
+    path: 5
+    path: 1
+    span: 106
+    span: 8
+    span: 22
+  }
+  location {
+    path: 4
+    path: 5
+    path: 2
+    path: 0
+    path: 5
+    span: 111
+    span: 2
+    span: 7
+  }
+  location {
+    path: 4
+    path: 5
+    path: 2
+    path: 0
+    span: 111
+    span: 2
+    span: 42
+    leading_comments: " The maximum number of vetted packages the server can return in a single\n response (page) when listing them.\n\n Required\n"
+  }
+  location {
+    path: 4
+    path: 5
+    path: 2
+    path: 0
+    path: 1
+    span: 111
+    span: 8
+    span: 37
+  }
+  location {
+    path: 4
+    path: 5
+    path: 2
+    path: 0
+    path: 3
+    span: 111
+    span: 40
+    span: 41
+  }
+  location {
+    path: 4
+    path: 6
+    span: 114
+    span: 0
+    span: 119
+    span: 1
+  }
+  location {
+    path: 4
+    path: 6
+    path: 1
+    span: 114
+    span: 8
+    span: 31
+  }
+  location {
+    path: 4
+    path: 6
+    path: 2
+    path: 0
+    path: 6
+    span: 118
+    span: 2
+    span: 26
+  }
+  location {
+    path: 4
+    path: 6
+    path: 2
+    path: 0
+    span: 118
+    span: 2
+    span: 68
+    leading_comments: " The maximum delay to emmit a new OffsetCheckpoint if it exists\n\n Required\n"
+  }
+  location {
+    path: 4
+    path: 6
+    path: 2
+    path: 0
+    path: 1
+    span: 118
+    span: 27
+    span: 63
+  }
+  location {
+    path: 4
+    path: 6
+    path: 2
+    path: 0
+    path: 3
+    span: 118
+    span: 66
+    span: 67
+  }
+}
+syntax: "proto3"

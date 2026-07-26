@@ -1,0 +1,25 @@
+922:        Test / PB.targets := Seq(
+923:          scalapb.gen() -> (Test / sourceManaged).value / "protobuf"
+1005:        Compile / PB.targets := Seq(
+1006:          scalapb.gen(flatPackage = true) -> (Compile / sourceManaged).value / "protobuf"
+1119:        Compile / PB.targets := Seq(
+1120:          scalapb.gen(flatPackage = true) -> (Compile / sourceManaged).value / "protobuf"
+1122:        Test / PB.targets := Seq(
+1123:          scalapb.gen(flatPackage = true) -> (Test / sourceManaged).value / "protobuf"
+1160:        Compile / PB.targets := Seq(
+1161:          scalapb.gen(flatPackage = true) -> (Compile / sourceManaged).value / "protobuf"
+1205:        Compile / PB.targets := Seq(
+1206:          scalapb.gen(flatPackage = true) -> (Compile / sourceManaged).value / "protobuf"
+1262:        Compile / PB.targets := Seq(
+1263:          scalapb.gen(flatPackage = true) -> (Compile / sourceManaged).value / "protobuf"
+1589:        Compile / PB.targets := Seq(
+1590:          scalapb.gen(flatPackage = true) -> (Compile / sourceManaged).value / "protobuf"
+2002:        Compile / PB.targets := Seq(
+2003:          scalapb.gen(flatPackage = false) -> (Compile / sourceManaged).value / "protobuf"
+2042:          Test / PB.targets := Seq(
+2044:            PB.gens.java -> (Test / sourceManaged).value / "protobuf",
+2046:            scalapb.gen(
+2916:        Compile / PB.targets := Seq(
+2917:          scalapb.gen(flatPackage = true) -> (Compile / sourceManaged).value / "protobuf"
+3141:        Compile / PB.targets := Seq(
+3143:          scalapb.gen(
