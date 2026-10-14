@@ -37,12 +37,7 @@ service UpdateService {
   //
   // - ACS delta: a requesting party must be a stakeholder of an event for it to be included.
   // - ledger effects: a requesting party must be a witness of an event for it to be included.
-  rpc GetUpdates(GetUpdatesRequest) returns (stream GetUpdatesResponse) {
-    option (google.api.http) = {
-      post: "/v2/updates"
-      body: "*"
-    };
-  }
+  rpc GetUpdates(GetUpdatesRequest) returns (stream GetUpdatesResponse);
 
   // Lookup an update by its offset.
   // If there is no update with this offset, or all the events are filtered, an UPDATE_NOT_FOUND error will be raised.

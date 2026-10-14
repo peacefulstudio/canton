@@ -55,11 +55,7 @@ service PartyManagementService {
   // List the parties known by the participant.
   // The list returned contains parties whose ledger access is facilitated by
   // the participant and the ones maintained elsewhere.
-  rpc ListKnownParties(ListKnownPartiesRequest) returns (ListKnownPartiesResponse) {
-    option (google.api.http) = {
-      get: "/v2/parties"
-    };
-  }
+  rpc ListKnownParties(ListKnownPartiesRequest) returns (ListKnownPartiesResponse);
 
   // Allocates a new party on a ledger and adds it to the set managed by the participant.
   // Caller specifies a party identifier suggestion, the actual identifier

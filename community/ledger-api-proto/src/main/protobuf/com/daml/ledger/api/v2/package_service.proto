@@ -69,11 +69,7 @@ service PackageService {
   }
 
   // Returns the contents of a single package.
-  rpc GetPackage(GetPackageRequest) returns (GetPackageResponse) {
-    option (google.api.http) = {
-      get: "/v2/packages/{package_id}"
-    };
-  }
+  rpc GetPackage(GetPackageRequest) returns (GetPackageResponse);
 
   // Returns the status of a single package.
   rpc GetPackageStatus(GetPackageStatusRequest) returns (GetPackageStatusResponse) {

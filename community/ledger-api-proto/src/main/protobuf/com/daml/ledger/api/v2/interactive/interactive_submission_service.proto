@@ -33,35 +33,15 @@ option java_package = "com.daml.ledger.api.v2.interactive";
 // This gives callers the ability to sign the daml transaction with their own signing keys
 service InteractiveSubmissionService {
   // Requires `readAs` scope for the submitting party when LAPI User authorization is enabled
-  rpc PrepareSubmission(PrepareSubmissionRequest) returns (PrepareSubmissionResponse) {
-    option (google.api.http) = {
-      post: "/v2/interactive-submission/prepare"
-      body: "*"
-    };
-  }
+  rpc PrepareSubmission(PrepareSubmissionRequest) returns (PrepareSubmissionResponse);
   // Execute a prepared submission _asynchronously_ on the ledger.
   // Requires `actAs` or `executeAs` scope for the submitting party when LAPI User authorization is enabled
   // Requires a signature of the transaction from the submitting external party.
-  rpc ExecuteSubmission(ExecuteSubmissionRequest) returns (ExecuteSubmissionResponse) {
-    option (google.api.http) = {
-      post: "/v2/interactive-submission/execute"
-      body: "*"
-    };
-  }
+  rpc ExecuteSubmission(ExecuteSubmissionRequest) returns (ExecuteSubmissionResponse);
   // Similar to ExecuteSubmission but _synchronously_ wait for the completion of the transaction
-  rpc ExecuteSubmissionAndWait(ExecuteSubmissionAndWaitRequest) returns (ExecuteSubmissionAndWaitResponse) {
-    option (google.api.http) = {
-      post: "/v2/interactive-submission/executeAndWait"
-      body: "*"
-    };
-  }
+  rpc ExecuteSubmissionAndWait(ExecuteSubmissionAndWaitRequest) returns (ExecuteSubmissionAndWaitResponse);
   // Similar to ExecuteSubmissionAndWait but additionally returns the transaction
-  rpc ExecuteSubmissionAndWaitForTransaction(ExecuteSubmissionAndWaitForTransactionRequest) returns (ExecuteSubmissionAndWaitForTransactionResponse) {
-    option (google.api.http) = {
-      post: "/v2/interactive-submission/executeAndWaitForTransaction"
-      body: "*"
-    };
-  }
+  rpc ExecuteSubmissionAndWaitForTransaction(ExecuteSubmissionAndWaitForTransactionRequest) returns (ExecuteSubmissionAndWaitForTransactionResponse);
 
   // Compute the preferred packages for the vetting requirements in the request.
   // A preferred package is the highest-versioned package for a provided package-name

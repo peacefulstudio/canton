@@ -53,11 +53,7 @@ service UserManagementService {
   }
 
   // Get the user data of a specific user or the authenticated user.
-  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
-    option (google.api.http) = {
-      get: "/v2/users/{user_id}"
-    };
-  }
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
 
   // Update selected modifiable attribute of a user resource described by the ``User`` message.
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
@@ -68,18 +64,10 @@ service UserManagementService {
   }
 
   // Delete an existing user and all its rights.
-  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
-    option (google.api.http) = {
-      delete: "/v2/users/{user_id}"
-    };
-  }
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
 
   // List all existing users.
-  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
-    option (google.api.http) = {
-      get: "/v2/users"
-    };
-  }
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
 
   // Grant rights to a user.
   // Granting rights does not affect the resource version of the corresponding user.
@@ -100,11 +88,7 @@ service UserManagementService {
   }
 
   // List the set of all rights granted to a user.
-  rpc ListUserRights(ListUserRightsRequest) returns (ListUserRightsResponse) {
-    option (google.api.http) = {
-      get: "/v2/users/{user_id}/rights"
-    };
-  }
+  rpc ListUserRights(ListUserRightsRequest) returns (ListUserRightsResponse);
 
   // Update the assignment of a user from one IDP to another.
   rpc UpdateUserIdentityProviderId(UpdateUserIdentityProviderIdRequest) returns (UpdateUserIdentityProviderIdResponse) {

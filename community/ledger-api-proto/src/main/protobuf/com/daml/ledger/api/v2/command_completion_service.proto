@@ -7,7 +7,6 @@ package com.daml.ledger.api.v2;
 
 import "com/daml/ledger/api/v2/completion.proto";
 import "com/daml/ledger/api/v2/offset_checkpoint.proto";
-import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
@@ -32,12 +31,7 @@ option java_package = "com.daml.ledger.api.v2";
 service CommandCompletionService {
   // Deprecated: please use ``GetCompletions`` instead.
   // Subscribe to command completion events.
-  rpc CompletionStream(CompletionStreamRequest) returns (stream CompletionStreamResponse) {
-    option (google.api.http) = {
-      post: "/v2/commands/completions"
-      body: "*"
-    };
-  }
+  rpc CompletionStream(CompletionStreamRequest) returns (stream CompletionStreamResponse);
 
   // Subscribe to command completion events.
   // This streaming endpoint provides more flexibility in filtering than the predecessor ``CompletionStream``.

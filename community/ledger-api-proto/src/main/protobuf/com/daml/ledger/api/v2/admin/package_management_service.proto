@@ -30,12 +30,7 @@ service PackageManagementService {
   // If vetting is enabled in the request, the DAR is checked for upgrade compatibility
   // with the set of the already vetted packages on the target vetting synchronizer
   // See UploadDarFileRequest for details regarding vetting and the target vetting synchronizer.
-  rpc UploadDarFile(UploadDarFileRequest) returns (UploadDarFileResponse) {
-    option (google.api.http) = {
-      post: "/v2/dars"
-      body: "dar_file"
-    };
-  }
+  rpc UploadDarFile(UploadDarFileRequest) returns (UploadDarFileResponse);
 
   // Validates the DAR and checks the upgrade compatibility of the DAR's packages
   // with the set of the already vetted packages on the target vetting synchronizer.
@@ -43,12 +38,7 @@ service PackageManagementService {
   //
   // The operation has no effect on the state of the participant or the Canton ledger:
   // the DAR payload and its packages are not persisted neither are the packages vetted.
-  rpc ValidateDarFile(ValidateDarFileRequest) returns (ValidateDarFileResponse) {
-    option (google.api.http) = {
-      post: "/v2/dars/validate"
-      body: "dar_file"
-    };
-  }
+  rpc ValidateDarFile(ValidateDarFileRequest) returns (ValidateDarFileResponse);
 
   // Update the vetted packages of this participant
   rpc UpdateVettedPackages(UpdateVettedPackagesRequest) returns (UpdateVettedPackagesResponse) {

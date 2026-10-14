@@ -29,12 +29,7 @@ service StateService {
   // the snapshot may fail with "FAILED_PRECONDITION/PARTICIPANT_PRUNED_DATA_ACCESSED".
   // Note that it is ok to request acs snapshots for party migration with offsets other than ledger end, because party
   // migration is not concerned with incomplete (un)assignments.
-  rpc GetActiveContracts(GetActiveContractsRequest) returns (stream GetActiveContractsResponse) {
-    option (google.api.http) = {
-      post: "/v2/state/active-contracts"
-      body: "*"
-    };
-  }
+  rpc GetActiveContracts(GetActiveContractsRequest) returns (stream GetActiveContractsResponse);
 
   // Returns a page of the snapshot of the active contracts and incomplete (un)assignments at a ledger offset.
   // Once all pages are fetched by repeated calls to ``GetActiveContractsPage``,
@@ -57,11 +52,7 @@ service StateService {
 
   // Get the current ledger end.
   // Subscriptions started with the returned offset will serve events after this RPC was called.
-  rpc GetLedgerEnd(GetLedgerEndRequest) returns (GetLedgerEndResponse) {
-    option (google.api.http) = {
-      get: "/v2/state/ledger-end"
-    };
-  }
+  rpc GetLedgerEnd(GetLedgerEndRequest) returns (GetLedgerEndResponse);
 
   // Get the latest successfully pruned ledger offsets
   rpc GetLatestPrunedOffsets(GetLatestPrunedOffsetsRequest) returns (GetLatestPrunedOffsetsResponse) {
