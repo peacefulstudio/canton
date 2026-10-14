@@ -100,7 +100,7 @@ message IdentityProviderConfig {
   // Can be left empty when used in `UpdateIdentityProviderConfigRequest` if the issuer is not being updated.
   //
   // Required
-  string issuer = 3 [(google.api.field_behavior) = REQUIRED];
+  string issuer = 3;
 
   // The JWKS (JSON Web Key Set) URL.
   // The Ledger API uses JWKs (JSON Web Keys) from the provided URL to verify that the JWT has been
@@ -108,7 +108,7 @@ message IdentityProviderConfig {
   // Modifiable
   //
   // Required
-  string jwks_url = 4 [(google.api.field_behavior) = REQUIRED];
+  string jwks_url = 4;
 
   // Specifies the audience of the JWT token.
   // When set, the callers using JWT tokens issued by this identity provider are allowed to get an access

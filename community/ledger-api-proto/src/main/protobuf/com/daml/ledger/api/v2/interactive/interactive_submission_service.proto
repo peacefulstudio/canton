@@ -373,7 +373,7 @@ message ExecuteSubmissionRequest {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string submission_id = 5 [(google.api.field_behavior) = REQUIRED];
+  string submission_id = 5;
 
   // See [PrepareSubmissionRequest.user_id]
   //
@@ -433,7 +433,7 @@ message ExecuteSubmissionAndWaitRequest {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string submission_id = 5 [(google.api.field_behavior) = REQUIRED];
+  string submission_id = 5;
 
   // See [PrepareSubmissionRequest.user_id]
   //
@@ -504,7 +504,7 @@ message ExecuteSubmissionAndWaitForTransactionRequest {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string submission_id = 5 [(google.api.field_behavior) = REQUIRED];
+  string submission_id = 5;
 
   // See [PrepareSubmissionRequest.user_id]
   //

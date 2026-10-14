@@ -84,7 +84,7 @@ message GetUpdatesRequest {
   // If the participant has been pruned, this parameter must be greater or equal than the pruning offset.
 
   // Required
-  int64 begin_exclusive = 1 [(google.api.field_behavior) = REQUIRED];
+  int64 begin_exclusive = 1;
 
   // Inclusive higher bound offset of the requested ledger section.
   // If specified the response will only contain transactions whose offset is less than or equal to this.

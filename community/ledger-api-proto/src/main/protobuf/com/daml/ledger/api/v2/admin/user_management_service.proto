@@ -417,7 +417,7 @@ message ListUserRightsRequest {
   // If set to empty string (the default), then the rights for the authenticated user will be listed.
   //
   // Required
-  string user_id = 1 [(google.api.field_behavior) = REQUIRED];
+  string user_id = 1;
 
   // The id of the ``Identity Provider``
   // If not set, assume the user is managed by the default identity provider.
