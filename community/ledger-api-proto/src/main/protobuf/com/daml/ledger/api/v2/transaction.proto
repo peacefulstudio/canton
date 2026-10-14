@@ -7,6 +7,7 @@ package com.daml.ledger.api.v2;
 
 import "com/daml/ledger/api/v2/event.proto";
 import "com/daml/ledger/api/v2/trace_context.proto";
+import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
@@ -20,7 +21,7 @@ message Transaction {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string update_id = 1;
+  string update_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the command which resulted in this transaction. Missing for everyone except the submitting party.
   // Must be a valid LedgerString (as described in ``value.proto``).
@@ -37,7 +38,7 @@ message Transaction {
   // Ledger effective time.
   //
   // Required
-  google.protobuf.Timestamp effective_at = 4;
+  google.protobuf.Timestamp effective_at = 4 [(google.api.field_behavior) = REQUIRED];
 
   // The collection of events.
   // Contains:
@@ -46,19 +47,19 @@ message Transaction {
   // - ``CreatedEvent`` or ``ExercisedEvent`` in case of LEDGER_EFFECTS transaction shape
   //
   // Required: must be non-empty
-  repeated Event events = 5;
+  repeated Event events = 5 [(google.api.field_behavior) = REQUIRED];
 
   // The absolute offset. The details of this field are described in ``community/ledger-api/README.md``.
   // It is a valid absolute offset (positive integer).
   //
   // Required
-  int64 offset = 6;
+  int64 offset = 6 [(google.api.field_behavior) = REQUIRED];
 
   // A valid synchronizer id.
   // Identifies the synchronizer that synchronized the transaction.
   //
   // Required
-  string synchronizer_id = 7;
+  string synchronizer_id = 7 [(google.api.field_behavior) = REQUIRED];
 
   // Ledger API trace context
   //
@@ -77,7 +78,7 @@ message Transaction {
   // which synchronized the transaction.
   //
   // Required
-  google.protobuf.Timestamp record_time = 9;
+  google.protobuf.Timestamp record_time = 9 [(google.api.field_behavior) = REQUIRED];
 
   // Deprecated: please use ``transaction_hash`` which has the same value.
   // For transaction externally signed, contains the external transaction hash

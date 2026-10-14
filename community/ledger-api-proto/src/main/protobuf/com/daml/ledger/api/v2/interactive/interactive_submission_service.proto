@@ -14,6 +14,7 @@ import "com/daml/ledger/api/v2/transaction.proto";
 import "com/daml/ledger/api/v2/transaction_filter.proto";
 import "com/daml/ledger/api/v2/value.proto";
 import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -108,36 +109,36 @@ message ReassignmentCost {
   // the unassignment cost is charged
   //
   // Required
-  string source_synchronizer_id = 1;
+  string source_synchronizer_id = 1 [(google.api.field_behavior) = REQUIRED];
   // The synchronizer the contracts will be re-assigned to, and against whose traffic balance
   // the assignment cost is charged
   //
   // Required
-  string target_synchronizer_id = 2;
+  string target_synchronizer_id = 2 [(google.api.field_behavior) = REQUIRED];
   // The contracts that will be unassigned together in this single unassignment request
   //
   // Required: must be non-empty
-  repeated string contract_ids = 3;
+  repeated string contract_ids = 3 [(google.api.field_behavior) = REQUIRED];
   // Estimated traffic cost of the unassignment confirmation request
   //
   // Required
-  uint64 unassignment_request_traffic_cost_estimation = 4;
+  uint64 unassignment_request_traffic_cost_estimation = 4 [(google.api.field_behavior) = REQUIRED];
   // Estimated traffic cost of the unassignment confirmation response
   //
   // Required
-  uint64 unassignment_response_traffic_cost_estimation = 5;
+  uint64 unassignment_response_traffic_cost_estimation = 5 [(google.api.field_behavior) = REQUIRED];
   // Estimated traffic cost of the assignment confirmation request
   //
   // Required
-  uint64 assignment_request_traffic_cost_estimation = 6;
+  uint64 assignment_request_traffic_cost_estimation = 6 [(google.api.field_behavior) = REQUIRED];
   // Estimated traffic cost of the assignment confirmation response
   //
   // Required
-  uint64 assignment_response_traffic_cost_estimation = 7;
+  uint64 assignment_response_traffic_cost_estimation = 7 [(google.api.field_behavior) = REQUIRED];
   // Sum of the fields above
   //
   // Required
-  uint64 total_reassignment_cost_estimation = 8;
+  uint64 total_reassignment_cost_estimation = 8 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Estimation of the cost of submitting the prepared transaction
@@ -148,21 +149,21 @@ message CostEstimation {
   // Timestamp at which the estimation was made
   //
   // Required
-  google.protobuf.Timestamp estimation_timestamp = 1;
+  google.protobuf.Timestamp estimation_timestamp = 1 [(google.api.field_behavior) = REQUIRED];
   // Estimated traffic cost of the confirmation request associated with the transaction
   //
   // Required
-  uint64 confirmation_request_traffic_cost_estimation = 2;
+  uint64 confirmation_request_traffic_cost_estimation = 2 [(google.api.field_behavior) = REQUIRED];
   // Estimated traffic cost of the confirmation response associated with the transaction
   // This field can also be used as an indication of the cost that other potential confirming nodes
   // of the party will incur to approve or reject the transaction
   //
   // Required
-  uint64 confirmation_response_traffic_cost_estimation = 3;
+  uint64 confirmation_response_traffic_cost_estimation = 3 [(google.api.field_behavior) = REQUIRED];
   // Sum of the fields above
   //
   // Required
-  uint64 total_traffic_cost_estimation = 4;
+  uint64 total_traffic_cost_estimation = 4 [(google.api.field_behavior) = REQUIRED];
   // Estimated cost of re-assigning contracts if necessary
   //
   // Optional: can be empty
@@ -185,14 +186,14 @@ message PrepareSubmissionRequest {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string command_id = 2;
+  string command_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Individual elements of this atomic command. Must be non-empty.
   // Limitation: Only single command transaction are currently supported by the API.
   // The field is marked as repeated in preparation for future support of multiple commands.
   //
   // Required: must be non-empty
-  repeated Command commands = 3;
+  repeated Command commands = 3 [(google.api.field_behavior) = REQUIRED];
 
   // Optional
   MinLedgerTime min_ledger_time = 4;
@@ -216,7 +217,7 @@ message PrepareSubmissionRequest {
   // Each element must be a valid PartyIdString (as described in ``value.proto``).
   //
   // Required: must be non-empty
-  repeated string act_as = 5;
+  repeated string act_as = 5 [(google.api.field_behavior) = REQUIRED];
 
   // Set of parties on whose behalf (in addition to all parties listed in ``act_as``) contracts can be retrieved.
   // This affects Daml operations such as ``fetch``, ``fetchByKey``, ``lookupByKey``, ``exercise``, and ``exerciseByKey``.
@@ -307,20 +308,20 @@ message PrepareSubmissionResponse {
   // Clients MUST display the content of the transaction to the user for them to validate before signing the hash if the preparing participant is not trusted.
   //
   // Required
-  PreparedTransaction prepared_transaction = 1;
+  PreparedTransaction prepared_transaction = 1 [(google.api.field_behavior) = REQUIRED];
   // Hash of the transaction, this is what needs to be signed by the party to authorize the transaction.
   // Only provided for convenience, clients MUST recompute the hash from the raw transaction if the preparing participant is not trusted.
   // May be removed in future versions
   //
   // Required: must be non-empty
-  bytes prepared_transaction_hash = 2;
+  bytes prepared_transaction_hash = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The hashing scheme version used when building the hash.
   // HASHING_SCHEME_VERSION_V4 is only returned for synchronizers running protocol version 36 or
   // later.
   //
   // Required
-  HashingSchemeVersion hashing_scheme_version = 3;
+  HashingSchemeVersion hashing_scheme_version = 3 [(google.api.field_behavior) = REQUIRED];
 
   // Optional additional details on how the transaction was encoded and hashed. Only set if verbose_hashing = true in the request
   // Note that there are no guarantees on the stability of the format or content of this field.
@@ -340,11 +341,11 @@ message SinglePartySignatures {
   // Submitting party
   //
   // Required
-  string party = 1;
+  string party = 1 [(google.api.field_behavior) = REQUIRED];
   // Signatures
   //
   // Required: must be non-empty
-  repeated Signature signatures = 2;
+  repeated Signature signatures = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Additional signatures provided by the submitting parties
@@ -352,7 +353,7 @@ message PartySignatures {
   // Additional signatures provided by all individual parties
   //
   // Required: must be non-empty
-  repeated SinglePartySignatures signatures = 1;
+  repeated SinglePartySignatures signatures = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message ExecuteSubmissionRequest {
@@ -361,7 +362,7 @@ message ExecuteSubmissionRequest {
   // obtained from calling `prepareSubmission`.
   //
   // Required
-  PreparedTransaction prepared_transaction = 1;
+  PreparedTransaction prepared_transaction = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The party(ies) signatures that authorize the prepared submission to be executed by this node.
   // Each party can provide one or more signatures..
@@ -369,7 +370,7 @@ message ExecuteSubmissionRequest {
   // Note that currently, only single party submissions are supported.
   //
   // Required
-  PartySignatures party_signatures = 2;
+  PartySignatures party_signatures = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Specifies the deduplication period for the change ID (See PrepareSubmissionRequest).
   // If omitted, the participant will assume the configured maximum deduplication time.
@@ -392,7 +393,7 @@ message ExecuteSubmissionRequest {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string submission_id = 5;
+  string submission_id = 5 [(google.api.field_behavior) = REQUIRED];
 
   // See [PrepareSubmissionRequest.user_id]
   //
@@ -404,7 +405,7 @@ message ExecuteSubmissionRequest {
   // rejected on synchronizers running older protocol versions.
   //
   // Required
-  HashingSchemeVersion hashing_scheme_version = 7;
+  HashingSchemeVersion hashing_scheme_version = 7 [(google.api.field_behavior) = REQUIRED];
 
   // If set will influence the chosen ledger effective time but will not result in a submission delay so any override
   // should be scheduled to executed within the window allowed by synchronizer.
@@ -421,7 +422,7 @@ message ExecuteSubmissionAndWaitRequest {
   // obtained from calling `prepareSubmission`.
   //
   // Required
-  PreparedTransaction prepared_transaction = 1;
+  PreparedTransaction prepared_transaction = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The party(ies) signatures that authorize the prepared submission to be executed by this node.
   // Each party can provide one or more signatures..
@@ -429,7 +430,7 @@ message ExecuteSubmissionAndWaitRequest {
   // Note that currently, only single party submissions are supported.
   //
   // Required
-  PartySignatures party_signatures = 2;
+  PartySignatures party_signatures = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Specifies the deduplication period for the change ID (See PrepareSubmissionRequest).
   // If omitted, the participant will assume the configured maximum deduplication time.
@@ -452,7 +453,7 @@ message ExecuteSubmissionAndWaitRequest {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string submission_id = 5;
+  string submission_id = 5 [(google.api.field_behavior) = REQUIRED];
 
   // See [PrepareSubmissionRequest.user_id]
   //
@@ -464,7 +465,7 @@ message ExecuteSubmissionAndWaitRequest {
   // rejected on synchronizers running older protocol versions.
   //
   // Required
-  HashingSchemeVersion hashing_scheme_version = 7;
+  HashingSchemeVersion hashing_scheme_version = 7 [(google.api.field_behavior) = REQUIRED];
 
   // If set will influence the chosen ledger effective time but will not result in a submission delay so any override
   // should be scheduled to executed within the window allowed by synchronizer.
@@ -478,12 +479,12 @@ message ExecuteSubmissionAndWaitResponse {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string update_id = 1;
+  string update_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The details of the offset field are described in ``community/ledger-api/README.md``.
   //
   // Required
-  int64 completion_offset = 2;
+  int64 completion_offset = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 message ExecuteSubmissionAndWaitForTransactionRequest {
@@ -492,7 +493,7 @@ message ExecuteSubmissionAndWaitForTransactionRequest {
   // obtained from calling `prepareSubmission`.
   //
   // Required
-  PreparedTransaction prepared_transaction = 1;
+  PreparedTransaction prepared_transaction = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The party(ies) signatures that authorize the prepared submission to be executed by this node.
   // Each party can provide one or more signatures..
@@ -500,7 +501,7 @@ message ExecuteSubmissionAndWaitForTransactionRequest {
   // Note that currently, only single party submissions are supported.
   //
   // Required
-  PartySignatures party_signatures = 2;
+  PartySignatures party_signatures = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Specifies the deduplication period for the change ID (See PrepareSubmissionRequest).
   // If omitted, the participant will assume the configured maximum deduplication time.
@@ -523,7 +524,7 @@ message ExecuteSubmissionAndWaitForTransactionRequest {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string submission_id = 5;
+  string submission_id = 5 [(google.api.field_behavior) = REQUIRED];
 
   // See [PrepareSubmissionRequest.user_id]
   //
@@ -535,7 +536,7 @@ message ExecuteSubmissionAndWaitForTransactionRequest {
   // rejected on synchronizers running older protocol versions.
   //
   // Required
-  HashingSchemeVersion hashing_scheme_version = 7;
+  HashingSchemeVersion hashing_scheme_version = 7 [(google.api.field_behavior) = REQUIRED];
 
   // If set will influence the chosen ledger effective time but will not result in a submission delay so any override
   // should be scheduled to executed within the window allowed by synchronizer.
@@ -558,7 +559,7 @@ message ExecuteSubmissionAndWaitForTransactionResponse {
   // The transaction might contain no events (request conditions result in filtering out all of them).
   //
   // Required
-  Transaction transaction = 1;
+  Transaction transaction = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message MinLedgerTime {
@@ -590,11 +591,11 @@ message PreparedTransaction {
   // Daml Transaction representing the ledger effect if executed. See below
   //
   // Required
-  DamlTransaction transaction = 1;
+  DamlTransaction transaction = 1 [(google.api.field_behavior) = REQUIRED];
   // Metadata context necessary to execute the transaction
   //
   // Required
-  Metadata metadata = 2;
+  Metadata metadata = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Transaction Metadata
@@ -602,15 +603,15 @@ message PreparedTransaction {
 message Metadata {
   message SubmitterInfo {
     // Required: must be non-empty
-    repeated string act_as = 1;
+    repeated string act_as = 1 [(google.api.field_behavior) = REQUIRED];
     // Required
-    string command_id = 2;
+    string command_id = 2 [(google.api.field_behavior) = REQUIRED];
   }
 
   // This message is deprecated and may be removed in future releases
   message GlobalKeyMappingEntry {
     // Required
-    interactive.GlobalKey key = 1 [deprecated = true];
+    interactive.GlobalKey key = 1 [deprecated = true, (google.api.field_behavior) = REQUIRED];
     // Optional
     optional Value value = 2 [deprecated = true];
   }
@@ -622,10 +623,10 @@ message Metadata {
       interactive.transaction.v1.Create v1 = 1;
     }
     // Required
-    uint64 created_at = 1000;
+    uint64 created_at = 1000 [(google.api.field_behavior) = REQUIRED];
     reserved 1001; // Used to contain driver_metadata, now contained in event_blob
     // Required: must be non-empty
-    bytes event_blob = 1002;
+    bytes event_blob = 1002 [(google.api.field_behavior) = REQUIRED];
   }
 
   /* ************************************************** */
@@ -636,15 +637,15 @@ message Metadata {
   reserved 1;
 
   // Required
-  SubmitterInfo submitter_info = 2;
+  SubmitterInfo submitter_info = 2 [(google.api.field_behavior) = REQUIRED];
   // Required
-  string synchronizer_id = 3;
+  string synchronizer_id = 3 [(google.api.field_behavior) = REQUIRED];
   // Required
-  uint32 mediator_group = 4;
+  uint32 mediator_group = 4 [(google.api.field_behavior) = REQUIRED];
   // Required
-  string transaction_uuid = 5;
+  string transaction_uuid = 5 [(google.api.field_behavior) = REQUIRED];
   // Required
-  uint64 preparation_time = 6;
+  uint64 preparation_time = 6 [(google.api.field_behavior) = REQUIRED];
   // Not populated if the transaction has no input contracts
   //
   // Optional: can be empty
@@ -689,9 +690,9 @@ message Metadata {
 message DamlTransaction {
   message NodeSeed {
     // Required
-    int32 node_id = 1;
+    int32 node_id = 1 [(google.api.field_behavior) = REQUIRED];
     // Required: must be non-empty
-    bytes seed = 2;
+    bytes seed = 2 [(google.api.field_behavior) = REQUIRED];
   }
 
   // A transaction may contain nodes with different versions.
@@ -699,7 +700,7 @@ message DamlTransaction {
   // [docs-entry-start: DamlTransaction.Node]
   message Node {
     // Required
-    string node_id = 1;
+    string node_id = 1 [(google.api.field_behavior) = REQUIRED];
 
     // Versioned node
     //
@@ -717,19 +718,19 @@ message DamlTransaction {
   // serialization version, will be >= max(nodes version)
   //
   // Required
-  string version = 1;
+  string version = 1 [(google.api.field_behavior) = REQUIRED];
   // Root nodes of the transaction
   //
   // Required: must be non-empty
-  repeated string roots = 2;
+  repeated string roots = 2 [(google.api.field_behavior) = REQUIRED];
   // List of nodes in the transaction
   //
   // Required: must be non-empty
-  repeated Node nodes = 3;
+  repeated Node nodes = 3 [(google.api.field_behavior) = REQUIRED];
   // Node seeds are values associated with certain nodes used for generating cryptographic salts
   //
   // Required: must be non-empty
-  repeated NodeSeed node_seeds = 4;
+  repeated NodeSeed node_seeds = 4 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Defines a package-name for which the commonly vetted package with the highest version must be found.
@@ -737,12 +738,12 @@ message PackageVettingRequirement {
   // The parties whose participants' vetting state should be considered when resolving the preferred package.
   //
   // Required: must be non-empty
-  repeated string parties = 1;
+  repeated string parties = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The package-name for which the preferred package should be resolved.
   //
   // Required
-  string package_name = 2;
+  string package_name = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GetPreferredPackagesRequest {
@@ -753,7 +754,7 @@ message GetPreferredPackagesRequest {
   // package dependencies of the command's root packages.
   //
   // Required: must be non-empty
-  repeated PackageVettingRequirement package_vetting_requirements = 1;
+  repeated PackageVettingRequirement package_vetting_requirements = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The synchronizer whose vetting state should be used for resolving this query.
   // If not specified, the vetting states of all synchronizers to which the participant is connected are used.
@@ -779,11 +780,11 @@ message GetPreferredPackagesResponse {
   // avoid race conditions with concurrent changes of the on-ledger package vetting state.
   //
   // Required: must be non-empty
-  repeated PackageReference package_references = 1;
+  repeated PackageReference package_references = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The synchronizer for which the package preferences are computed.
   // If the synchronizer_id was specified in the request, then it matches the request synchronizer_id.
   //
   // Required
-  string synchronizer_id = 2;
+  string synchronizer_id = 2 [(google.api.field_behavior) = REQUIRED];
 }

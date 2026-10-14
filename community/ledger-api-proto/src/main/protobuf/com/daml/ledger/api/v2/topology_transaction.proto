@@ -7,6 +7,7 @@ package com.daml.ledger.api.v2;
 
 import "com/daml/ledger/api/v2/state_service.proto";
 import "com/daml/ledger/api/v2/trace_context.proto";
+import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
@@ -19,31 +20,31 @@ message TopologyTransaction {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string update_id = 1;
+  string update_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The absolute offset. The details of this field are described in ``community/ledger-api/README.md``.
   // It is a valid absolute offset (positive integer).
   //
   // Required
-  int64 offset = 2;
+  int64 offset = 2 [(google.api.field_behavior) = REQUIRED];
 
   // A valid synchronizer id.
   // Identifies the synchronizer that synchronized the topology transaction.
   //
   // Required
-  string synchronizer_id = 3;
+  string synchronizer_id = 3 [(google.api.field_behavior) = REQUIRED];
 
   // The time at which the changes in the topology transaction become effective. There is a small delay between a
   // topology transaction being sequenced and the changes it contains becoming effective. Topology transactions appear
   // in order relative to a synchronizer based on their effective time rather than their sequencing time.
   //
   // Required
-  google.protobuf.Timestamp record_time = 4;
+  google.protobuf.Timestamp record_time = 4 [(google.api.field_behavior) = REQUIRED];
 
   // A non-empty list of topology events.
   //
   // Required: must be non-empty
-  repeated TopologyEvent events = 5;
+  repeated TopologyEvent events = 5 [(google.api.field_behavior) = REQUIRED];
 
   // Ledger API trace context
   //
@@ -71,41 +72,41 @@ message TopologyEvent {
 
 message ParticipantAuthorizationAdded {
   // Required
-  string party_id = 1;
+  string party_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Required
-  string participant_id = 2;
+  string participant_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Required
-  ParticipantPermission participant_permission = 3;
+  ParticipantPermission participant_permission = 3 [(google.api.field_behavior) = REQUIRED];
 }
 
 message ParticipantAuthorizationChanged {
   // Required
-  string party_id = 1;
+  string party_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Required
-  string participant_id = 2;
+  string participant_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Required
-  ParticipantPermission participant_permission = 3;
+  ParticipantPermission participant_permission = 3 [(google.api.field_behavior) = REQUIRED];
 }
 
 message ParticipantAuthorizationRevoked {
   // Required
-  string party_id = 1;
+  string party_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Required
-  string participant_id = 2;
+  string participant_id = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 message ParticipantAuthorizationOnboarding {
   // Required
-  string party_id = 1;
+  string party_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Required
-  string participant_id = 2;
+  string participant_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Required
-  ParticipantPermission participant_permission = 3;
+  ParticipantPermission participant_permission = 3 [(google.api.field_behavior) = REQUIRED];
 }

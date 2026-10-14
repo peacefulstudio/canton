@@ -11,6 +11,7 @@ import "com/daml/ledger/api/v2/reassignment_commands.proto";
 import "com/daml/ledger/api/v2/transaction.proto";
 import "com/daml/ledger/api/v2/transaction_filter.proto";
 import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
 option csharp_namespace = "Com.Daml.Ledger.Api.V2";
@@ -56,7 +57,7 @@ message SubmitAndWaitRequest {
   // The commands to be submitted.
   //
   // Required
-  Commands commands = 1;
+  Commands commands = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // These commands are executed as a single atomic transaction.
@@ -64,7 +65,7 @@ message SubmitAndWaitForTransactionRequest {
   // The commands to be submitted.
   //
   // Required
-  Commands commands = 1;
+  Commands commands = 1 [(google.api.field_behavior) = REQUIRED];
 
   // If no ``transaction_format`` is provided, a default will be used where ``transaction_shape`` is set to
   // TRANSACTION_SHAPE_ACS_DELTA, ``event_format`` is defined with ``filters_by_party`` containing wildcard-template
@@ -79,12 +80,12 @@ message SubmitAndWaitResponse {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string update_id = 1;
+  string update_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The details of the offset field are described in ``community/ledger-api/README.md``.
   //
   // Required
-  int64 completion_offset = 2;
+  int64 completion_offset = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 message SubmitAndWaitForTransactionResponse {
@@ -92,7 +93,7 @@ message SubmitAndWaitForTransactionResponse {
   // The transaction might contain no events (request conditions result in filtering out all of them).
   //
   // Required
-  Transaction transaction = 1;
+  Transaction transaction = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // This reassignment is executed as a single atomic update.
@@ -100,7 +101,7 @@ message SubmitAndWaitForReassignmentRequest {
   // The reassignment commands to be submitted.
   //
   // Required
-  ReassignmentCommands reassignment_commands = 1;
+  ReassignmentCommands reassignment_commands = 1 [(google.api.field_behavior) = REQUIRED];
 
   // If no event_format provided, the result will contain no events.
   // The events in the result, will take shape TRANSACTION_SHAPE_ACS_DELTA.
@@ -114,5 +115,5 @@ message SubmitAndWaitForReassignmentResponse {
   // The reassignment might contain no events (request conditions result in filtering out all of them).
   //
   // Required
-  Reassignment reassignment = 1;
+  Reassignment reassignment = 1 [(google.api.field_behavior) = REQUIRED];
 }

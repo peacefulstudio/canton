@@ -6,6 +6,7 @@ syntax = "proto3";
 package com.daml.ledger.api.v2;
 
 import "com/daml/ledger/api/v2/value.proto";
+import "google/api/field_behavior.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -32,12 +33,12 @@ message CreateCommand {
   // Note: The package-id reference identifier format is deprecated. We plan to end support for this format in version 3.4.
   //
   // Required
-  Identifier template_id = 1;
+  Identifier template_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The arguments required for creating a contract from this template.
   //
   // Required
-  Record create_arguments = 2;
+  Record create_arguments = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Exercise a choice on an existing contract.
@@ -48,24 +49,24 @@ message ExerciseCommand {
   // To exercise a choice on an interface, specify the interface identifier in the template_id field.
   //
   // Required
-  Identifier template_id = 1;
+  Identifier template_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the contract the client wants to exercise upon.
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string contract_id = 2;
+  string contract_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The name of the choice the client wants to exercise.
   // Must be a valid NameString (as described in ``value.proto``)
   //
   // Required
-  string choice = 3;
+  string choice = 3 [(google.api.field_behavior) = REQUIRED];
 
   // The argument for this choice.
   //
   // Required
-  Value choice_argument = 4;
+  Value choice_argument = 4 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Exercise a choice on an existing contract specified by its key.
@@ -75,23 +76,23 @@ message ExerciseByKeyCommand {
   // Note: The package-id reference identifier format is deprecated. We plan to end support for this format in version 3.4.
   //
   // Required
-  Identifier template_id = 1;
+  Identifier template_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The key of the contract the client wants to exercise upon.
   //
   // Required
-  Value contract_key = 2;
+  Value contract_key = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The name of the choice the client wants to exercise.
   // Must be a valid NameString (as described in ``value.proto``)
   //
   // Required
-  string choice = 3;
+  string choice = 3 [(google.api.field_behavior) = REQUIRED];
 
   // The argument for this choice.
   //
   // Required
-  Value choice_argument = 4;
+  Value choice_argument = 4 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Create a contract and exercise a choice on it in the same transaction.
@@ -101,23 +102,23 @@ message CreateAndExerciseCommand {
   // Note: The package-id reference identifier format is deprecated. We plan to end support for this format in version 3.4.
   //
   // Required
-  Identifier template_id = 1;
+  Identifier template_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The arguments required for creating a contract from this template.
   //
   // Required
-  Record create_arguments = 2;
+  Record create_arguments = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The name of the choice the client wants to exercise.
   // Must be a valid NameString (as described in ``value.proto``).
   //
   // Required
-  string choice = 3;
+  string choice = 3 [(google.api.field_behavior) = REQUIRED];
 
   // The argument for this choice.
   //
   // Required
-  Value choice_argument = 4;
+  Value choice_argument = 4 [(google.api.field_behavior) = REQUIRED];
 }
 
 // An additional contract that is used to resolve
@@ -142,7 +143,7 @@ message DisclosedContract {
   // to reconstruct a contract not known to the receiving participant.
   //
   // Required: must be non-empty
-  bytes created_event_blob = 3;
+  bytes created_event_blob = 3 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the synchronizer where the contract is currently assigned
   //
@@ -173,12 +174,12 @@ message Commands {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string command_id = 3;
+  string command_id = 3 [(google.api.field_behavior) = REQUIRED];
 
   // Individual elements of this atomic command. Must be non-empty.
   //
   // Required: must be non-empty
-  repeated Command commands = 4;
+  repeated Command commands = 4 [(google.api.field_behavior) = REQUIRED];
 
   // Specifies the deduplication period for the change ID.
   // If omitted, the participant will assume the configured maximum deduplication time.
@@ -216,7 +217,7 @@ message Commands {
   // Each element must be a valid PartyIdString (as described in ``value.proto``).
   //
   // Required: must be non-empty
-  repeated string act_as = 9;
+  repeated string act_as = 9 [(google.api.field_behavior) = REQUIRED];
 
   // Set of parties on whose behalf (in addition to all parties listed in ``act_as``) contracts can be retrieved.
   // This affects Daml operations such as ``fetch``, ``fetchByKey``, ``lookupByKey``, ``exercise``, and ``exerciseByKey``.
@@ -281,12 +282,12 @@ message PrefetchContractKey {
   // Note: The package-id reference identifier format is deprecated. We plan to end support for this format in version 3.4.
   //
   // Required
-  Identifier template_id = 1;
+  Identifier template_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The key of the contract the client wants to prefetch.
   //
   // Required
-  Value contract_key = 2;
+  Value contract_key = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The number of contracts to prefetch for this key, if available.
   // This is in addition to disclosed contracts.

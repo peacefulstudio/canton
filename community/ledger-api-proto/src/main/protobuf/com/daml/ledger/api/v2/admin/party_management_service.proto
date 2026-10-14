@@ -8,6 +8,7 @@ package com.daml.ledger.api.v2.admin;
 import "com/daml/ledger/api/v2/admin/object_meta.proto";
 import "com/daml/ledger/api/v2/crypto.proto";
 import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
 import "google/protobuf/field_mask.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2/admin;adminv2";
@@ -142,7 +143,7 @@ message GetParticipantIdResponse {
   // Must be a valid ParticipantIdStrings (as describe in ``value.proto``).
   //
   // Required
-  string participant_id = 1;
+  string participant_id = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Required authorization: ``HasRight(ParticipantAdmin) OR IsAuthenticatedIdentityProviderAdmin(identity_provider_id)``
@@ -151,7 +152,7 @@ message GetPartiesRequest {
   // Must be valid PartyIdStrings (as described in ``value.proto``).
   //
   // Required: must be non-empty
-  repeated string parties = 1;
+  repeated string parties = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The id of the ``Identity Provider`` whose parties should be retrieved.
   // If not set, assume the party is managed by the default identity provider or party is not hosted by the participant.
@@ -165,7 +166,7 @@ message GetPartiesResponse {
   // The party details may not be in the same order as requested.
   //
   // Required: must be non-empty
-  repeated PartyDetails party_details = 1;
+  repeated PartyDetails party_details = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Required authorization: ``HasRight(ParticipantAdmin) OR IsAuthenticatedIdentityProviderAdmin(identity_provider_id)``
@@ -205,7 +206,7 @@ message ListKnownPartiesResponse {
   // The details of all Daml parties known by the participant.
   //
   // Required: must be non-empty
-  repeated PartyDetails party_details = 1;
+  repeated PartyDetails party_details = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Pagination token to retrieve the next page.
   // Empty, if there are no further results.
@@ -255,7 +256,7 @@ message AllocatePartyResponse {
   // The allocated party details
   //
   // Required
-  PartyDetails party_details = 1;
+  PartyDetails party_details = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Required authorization:
@@ -265,7 +266,7 @@ message AllocateExternalPartyRequest {
     // The serialized TopologyTransaction
     //
     // Required: must be non-empty
-    bytes transaction = 1;
+    bytes transaction = 1 [(google.api.field_behavior) = REQUIRED];
     // Additional signatures for this transaction specifically
     // Use for transactions that require additional signatures beyond the namespace key signatures
     // e.g: PartyToParticipant must be signed by all registered keys
@@ -278,7 +279,7 @@ message AllocateExternalPartyRequest {
   // Synchronizer ID on which to onboard the party
   //
   // Required
-  string synchronizer = 1;
+  string synchronizer = 1 [(google.api.field_behavior) = REQUIRED];
 
   // TopologyTransactions to onboard the external party
   // Can contain:
@@ -290,7 +291,7 @@ message AllocateExternalPartyRequest {
   // Must be provided.
   //
   // Required: must be non-empty
-  repeated SignedTransaction onboarding_transactions = 2;
+  repeated SignedTransaction onboarding_transactions = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Optional signatures of the combined hash of all onboarding_transactions
   // This may be used instead of providing signatures on each individual transaction
@@ -324,7 +325,7 @@ message AllocateExternalPartyResponse {
   // The allocated party id
   //
   // Required
-  string party_id = 1;
+  string party_id = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Required authorization: ``HasRight(ParticipantAdmin) OR IsAuthenticatedIdentityProviderAdmin(party_details.identity_provider_id)``
@@ -333,7 +334,7 @@ message UpdatePartyDetailsRequest {
   // Modifiable
   //
   // Required
-  PartyDetails party_details = 1;
+  PartyDetails party_details = 1 [(google.api.field_behavior) = REQUIRED];
 
   // An update mask specifies how and which properties of the ``PartyDetails`` message are to be updated.
   // An update mask consists of a set of update paths.
@@ -357,14 +358,14 @@ message UpdatePartyDetailsRequest {
   // For similar Ledger API see ``com.daml.ledger.api.v2.admin.UpdateUserRequest``.
   //
   // Required
-  google.protobuf.FieldMask update_mask = 2;
+  google.protobuf.FieldMask update_mask = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 message UpdatePartyDetailsResponse {
   // Updated party details
   //
   // Required
-  PartyDetails party_details = 1;
+  PartyDetails party_details = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message PartyDetails {
@@ -372,7 +373,7 @@ message PartyDetails {
   // Must be a valid PartyIdString (as described in ``value.proto``).
   //
   // Required
-  string party = 1;
+  string party = 1 [(google.api.field_behavior) = REQUIRED];
 
   // true if party is hosted by the participant and the party shares the same identity provider as the user issuing the request.
   //
@@ -401,7 +402,7 @@ message UpdatePartyIdentityProviderIdRequest {
   // Party to update
   //
   // Required
-  string party = 1;
+  string party = 1 [(google.api.field_behavior) = REQUIRED];
   // Current identity provider id of the party
   //
   // Optional
@@ -419,17 +420,17 @@ message GenerateExternalPartyTopologyRequest {
   // TODO(#27670) support synchronizer aliases
   //
   // Required
-  string synchronizer = 1;
+  string synchronizer = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The actual party id will be constructed from this hint and a fingerprint of the public key
   //
   // Required
-  string party_hint = 2;
+  string party_hint = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Public key
   //
   // Required
-  com.daml.ledger.api.v2.SigningPublicKey public_key = 3;
+  com.daml.ledger.api.v2.SigningPublicKey public_key = 3 [(google.api.field_behavior) = REQUIRED];
 
   // If true, then the local participant will only be observing, not confirming. Default false.
   //
@@ -457,12 +458,12 @@ message GenerateExternalPartyTopologyResponse {
   // The generated party id
   //
   // Required
-  string party_id = 1;
+  string party_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The fingerprint of the supplied public key
   //
   // Required
-  string public_key_fingerprint = 2;
+  string public_key_fingerprint = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The serialized topology transactions which need to be signed and submitted as part of the allocate party process
   // Note that the serialization includes the versioning information. Therefore, the transaction here is serialized
@@ -470,10 +471,10 @@ message GenerateExternalPartyTopologyResponse {
   // supported by the synchronizer.
   //
   // Required: must be non-empty
-  repeated bytes topology_transactions = 3;
+  repeated bytes topology_transactions = 3 [(google.api.field_behavior) = REQUIRED];
 
   // the multi-hash which may be signed instead of each individual transaction
   //
   // Required: must be non-empty
-  bytes multi_hash = 4;
+  bytes multi_hash = 4 [(google.api.field_behavior) = REQUIRED];
 }

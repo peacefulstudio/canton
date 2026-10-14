@@ -7,6 +7,7 @@ package com.daml.ledger.api.v2.admin;
 
 import "com/daml/ledger/api/v2/admin/object_meta.proto";
 import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
 import "google/protobuf/field_mask.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2/admin;adminv2";
@@ -124,7 +125,7 @@ message User {
   // characters that are either alphanumeric ASCII characters or one of the symbols "@^$.!`-#+'~_|:()".
   //
   // Required
-  string id = 1;
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The primary party as which this user reads and acts by default on the ledger
   // *provided* it has the corresponding ``CanReadAs(primary_party)`` or
@@ -174,14 +175,14 @@ message Right {
     // The right to authorize commands for this party.
     //
     // Required
-    string party = 1;
+    string party = 1 [(google.api.field_behavior) = REQUIRED];
   }
 
   message CanReadAs {
     // The right to read ledger data visible to this party.
     //
     // Required
-    string party = 1;
+    string party = 1 [(google.api.field_behavior) = REQUIRED];
   }
 
   message CanExecuteAs {
@@ -191,7 +192,7 @@ message Right {
     // Right to execute as a party is also implicitly contained in the CanActAs right.
     //
     // Required
-    string party = 1;
+    string party = 1 [(google.api.field_behavior) = REQUIRED];
   }
 
   // The right to administer the identity provider that the user is assigned to.
@@ -242,7 +243,7 @@ message CreateUserRequest {
   // The user to create.
   //
   // Required
-  User user = 1;
+  User user = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The rights to be assigned to the user upon creation,
   // which SHOULD include appropriate rights for the ``user.primary_party``.
@@ -255,7 +256,7 @@ message CreateUserResponse {
   // Created user.
   //
   // Required
-  User user = 1;
+  User user = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Required authorization: ``HasRight(ParticipantAdmin) OR IsAuthenticatedIdentityProviderAdmin(identity_provider_id) OR IsAuthenticatedUser(user_id)``
@@ -277,7 +278,7 @@ message GetUserResponse {
   // Retrieved user.
   //
   // Required
-  User user = 1;
+  User user = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Required authorization: ``HasRight(ParticipantAdmin) OR IsAuthenticatedIdentityProviderAdmin(user.identity_provider_id)``
@@ -286,7 +287,7 @@ message UpdateUserRequest {
   // Modifiable
   //
   // Required
-  User user = 1;
+  User user = 1 [(google.api.field_behavior) = REQUIRED];
 
   // An update mask specifies how and which properties of the ``User`` message are to be updated.
   // An update mask consists of a set of update paths.
@@ -308,14 +309,14 @@ message UpdateUserRequest {
   // For similar Ledger API see ``com.daml.ledger.api.v2.admin.UpdatePartyDetailsRequest``.
   //
   // Required
-  google.protobuf.FieldMask update_mask = 2;
+  google.protobuf.FieldMask update_mask = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 message UpdateUserResponse {
   // Updated user
   //
   // Required
-  User user = 1;
+  User user = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Required authorization: ``HasRight(ParticipantAdmin) OR IsAuthenticatedIdentityProviderAdmin(identity_provider_id)``
@@ -323,7 +324,7 @@ message DeleteUserRequest {
   // The user to delete.
   //
   // Required
-  string user_id = 1;
+  string user_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The id of the ``Identity Provider``
   // If not set, assume the user is managed by the default identity provider.
@@ -377,7 +378,7 @@ message GrantUserRightsRequest {
   // The user to whom to grant rights.
   //
   // Required
-  string user_id = 1;
+  string user_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The rights to grant.
   //
@@ -405,7 +406,7 @@ message RevokeUserRightsRequest {
   // The user from whom to revoke rights.
   //
   // Required
-  string user_id = 1;
+  string user_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The rights to revoke.
   //
@@ -432,7 +433,7 @@ message ListUserRightsRequest {
   // If set to empty string (the default), then the rights for the authenticated user will be listed.
   //
   // Required
-  string user_id = 1;
+  string user_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The id of the ``Identity Provider``
   // If not set, assume the user is managed by the default identity provider.
@@ -453,7 +454,7 @@ message UpdateUserIdentityProviderIdRequest {
   // User to update
   //
   // Required
-  string user_id = 1;
+  string user_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Current identity provider ID of the user
   // If omitted, the default IDP is assumed

@@ -6,6 +6,7 @@ syntax = "proto3";
 package com.daml.ledger.api.v2;
 
 import "com/daml/ledger/api/v2/value.proto";
+import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "google/rpc/status.proto";
 
@@ -43,7 +44,7 @@ message CreatedEvent {
   // It is a valid absolute offset (positive integer)
   //
   // Required
-  int64 offset = 1;
+  int64 offset = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The position of this event in the originating transaction or reassignment.
   // The origin has contextual meaning, please see description at messages that include a CreatedEvent.
@@ -52,19 +53,19 @@ message CreatedEvent {
   // Must be valid node ID (non-negative integer)
   //
   // Required
-  int32 node_id = 2;
+  int32 node_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the created contract.
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string contract_id = 3;
+  string contract_id = 3 [(google.api.field_behavior) = REQUIRED];
 
   // The template of the created contract.
   // The identifier uses the package-id reference format.
   //
   // Required
-  Identifier template_id = 4;
+  Identifier template_id = 4 [(google.api.field_behavior) = REQUIRED];
 
   // The key of the created contract.
   // This will be set if and only if ``template_id`` defines a contract key.
@@ -81,7 +82,7 @@ message CreatedEvent {
   // The arguments that have been used to create the contract.
   //
   // Required
-  Record create_arguments = 6;
+  Record create_arguments = 6 [(google.api.field_behavior) = REQUIRED];
 
   // Opaque representation of contract create event payload intended for forwarding
   // to an API server as a contract disclosed as part of a command
@@ -128,12 +129,12 @@ message CreatedEvent {
   // where the party is not hosted on the participant node.
   //
   // Required: must be non-empty
-  repeated string witness_parties = 9;
+  repeated string witness_parties = 9 [(google.api.field_behavior) = REQUIRED];
 
   // The signatories for this contract as specified by the template.
   //
   // Required: must be non-empty
-  repeated string signatories = 10;
+  repeated string signatories = 10 [(google.api.field_behavior) = REQUIRED];
 
   // The observers for this contract as specified explicitly by the template or implicitly as choice controllers.
   // This field never contains parties that are signatories.
@@ -144,18 +145,18 @@ message CreatedEvent {
   // Ledger effective time of the transaction that created the contract.
   //
   // Required
-  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp created_at = 12 [(google.api.field_behavior) = REQUIRED];
 
   // The package name of the created contract.
   //
   // Required
-  string package_name = 13;
+  string package_name = 13 [(google.api.field_behavior) = REQUIRED];
 
   // Whether this event would be part of respective ACS_DELTA shaped stream,
   // and should therefore considered when tracking contract activeness on the client-side.
   //
   // Required
-  bool acs_delta = 14;
+  bool acs_delta = 14 [(google.api.field_behavior) = REQUIRED];
 
   // A package-id present in the participant package store that typechecks the contract's argument.
   // This may differ from the package-id of the template used to create the contract.
@@ -164,7 +165,7 @@ message CreatedEvent {
   // NOTE: Experimental, server internal concept, not for client consumption. Subject to change without notice.
   //
   // Required
-  string representative_package_id = 15;
+  string representative_package_id = 15 [(google.api.field_behavior) = REQUIRED];
 }
 
 // View of a create event matched by an interface filter.
@@ -173,14 +174,14 @@ message InterfaceView {
   // The identifier uses the package-id reference format.
   //
   // Required
-  Identifier interface_id = 1;
+  Identifier interface_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Whether the view was successfully computed, and if not,
   // the reason for the error. The error is reported using the same rules
   // for error codes and messages as the errors returned for API requests.
   //
   // Required
-  google.rpc.Status view_status = 2;
+  google.rpc.Status view_status = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The value of the interface's view method on this event.
   // Set if it was requested in the ``InterfaceFilter`` and it could be
@@ -207,7 +208,7 @@ message ArchivedEvent {
   // It is a valid absolute offset (positive integer)
   //
   // Required
-  int64 offset = 1;
+  int64 offset = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The position of this event in the originating transaction or reassignment.
   // Node IDs are not necessarily equal across participants,
@@ -215,13 +216,13 @@ message ArchivedEvent {
   // Must be valid node ID (non-negative integer)
   //
   // Required
-  int32 node_id = 2;
+  int32 node_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the archived contract.
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string contract_id = 3;
+  string contract_id = 3 [(google.api.field_behavior) = REQUIRED];
 
   // Identifies the template that defines the choice that archived the contract.
   // This template's package-id may differ from the target contract's package-id
@@ -230,7 +231,7 @@ message ArchivedEvent {
   // The identifier uses the package-id reference format.
   //
   // Required
-  Identifier template_id = 4;
+  Identifier template_id = 4 [(google.api.field_behavior) = REQUIRED];
 
   // The parties that are notified of this event. For an ``ArchivedEvent``,
   // these are the intersection of the stakeholders of the contract in
@@ -241,12 +242,12 @@ message ArchivedEvent {
   // in ``value.proto``).
   //
   // Required: must be non-empty
-  repeated string witness_parties = 5;
+  repeated string witness_parties = 5 [(google.api.field_behavior) = REQUIRED];
 
   // The package name of the contract.
   //
   // Required
-  string package_name = 6;
+  string package_name = 6 [(google.api.field_behavior) = REQUIRED];
 
   // The interfaces implemented by the target template that have been
   // matched from the interface filter query.
@@ -266,7 +267,7 @@ message ExercisedEvent {
   // It is a valid absolute offset (positive integer)
   //
   // Required
-  int64 offset = 1;
+  int64 offset = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The position of this event in the originating transaction or reassignment.
   // Node IDs are not necessarily equal across participants,
@@ -274,13 +275,13 @@ message ExercisedEvent {
   // Must be valid node ID (non-negative integer)
   //
   // Required
-  int32 node_id = 2;
+  int32 node_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the target contract.
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string contract_id = 3;
+  string contract_id = 3 [(google.api.field_behavior) = REQUIRED];
 
   // Identifies the template that defines the executed choice.
   // This template's package-id may differ from the target contract's package-id
@@ -289,7 +290,7 @@ message ExercisedEvent {
   // The identifier uses the package-id reference format.
   //
   // Required
-  Identifier template_id = 4;
+  Identifier template_id = 4 [(google.api.field_behavior) = REQUIRED];
 
   // The interface where the choice is defined, if inherited.
   // If defined, the identifier uses the package-id reference format.
@@ -301,23 +302,23 @@ message ExercisedEvent {
   // Must be a valid NameString (as described in ``value.proto``).
   //
   // Required
-  string choice = 6;
+  string choice = 6 [(google.api.field_behavior) = REQUIRED];
 
   // The argument of the exercised choice.
   //
   // Required
-  Value choice_argument = 7;
+  Value choice_argument = 7 [(google.api.field_behavior) = REQUIRED];
 
   // The parties that exercised the choice.
   // Each element must be a valid PartyIdString (as described in ``value.proto``).
   //
   // Required: must be non-empty
-  repeated string acting_parties = 8;
+  repeated string acting_parties = 8 [(google.api.field_behavior) = REQUIRED];
 
   // If true, the target contract may no longer be exercised.
   //
   // Required
-  bool consuming = 9;
+  bool consuming = 9 [(google.api.field_behavior) = REQUIRED];
 
   // The parties that are notified of this event. The witnesses of an exercise
   // node will depend on whether the exercise was consuming or not.
@@ -337,7 +338,7 @@ message ExercisedEvent {
   // Each element must be a valid PartyIdString (as described in ``value.proto``).
   //
   // Required: must be non-empty
-  repeated string witness_parties = 10;
+  repeated string witness_parties = 10 [(google.api.field_behavior) = REQUIRED];
 
   // Specifies the upper boundary of the node ids of the events in the same transaction that appeared as a result of
   // this ``ExercisedEvent``. This allows unambiguous identification of all the members of the subtree rooted at this
@@ -345,7 +346,7 @@ message ExercisedEvent {
   // filtered, it is only possible to determine if a node is in a consequent subtree or not.
   //
   // Required
-  int32 last_descendant_node_id = 11;
+  int32 last_descendant_node_id = 11 [(google.api.field_behavior) = REQUIRED];
 
   // The result of exercising the choice.
   //
@@ -355,7 +356,7 @@ message ExercisedEvent {
   // The package name of the contract.
   //
   // Required
-  string package_name = 13;
+  string package_name = 13 [(google.api.field_behavior) = REQUIRED];
 
   // If the event is consuming, the interfaces implemented by the target template that have been
   // matched from the interface filter query.
@@ -370,5 +371,5 @@ message ExercisedEvent {
   // and should therefore considered when tracking contract activeness on the client-side.
   //
   // Required
-  bool acs_delta = 15;
+  bool acs_delta = 15 [(google.api.field_behavior) = REQUIRED];
 }

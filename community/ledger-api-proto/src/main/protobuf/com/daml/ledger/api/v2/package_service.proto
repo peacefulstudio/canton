@@ -7,6 +7,7 @@ package com.daml.ledger.api.v2;
 
 import "com/daml/ledger/api/v2/package_reference.proto";
 import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
 option csharp_namespace = "Com.Daml.Ledger.Api.V2";
@@ -18,32 +19,32 @@ message ListPackagesResponse {
   // Each element must be a valid PackageIdString (as described in ``value.proto``).
   //
   // Required: must be non-empty
-  repeated string package_ids = 1;
+  repeated string package_ids = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GetPackageResponse {
   // The hash function we use to calculate the hash.
   //
   // Required
-  HashFunction hash_function = 1;
+  HashFunction hash_function = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Contains a ``daml_lf`` ArchivePayload. See further details in ``daml_lf.proto``.
   //
   // Required: must be non-empty
-  bytes archive_payload = 2;
+  bytes archive_payload = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The hash of the archive payload, can also used as a ``package_id``.
   // Must be a valid PackageIdString (as described in ``value.proto``).
   //
   // Required
-  string hash = 3;
+  string hash = 3 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GetPackageStatusResponse {
   // The status of the package.
   //
   // Required
-  PackageStatus package_status = 1;
+  PackageStatus package_status = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 enum PackageStatus {
@@ -98,7 +99,7 @@ message GetPackageRequest {
   // Must be a valid PackageIdString (as described in ``value.proto``).
   //
   // Required
-  string package_id = 1;
+  string package_id = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GetPackageStatusRequest {
@@ -106,7 +107,7 @@ message GetPackageStatusRequest {
   // Must be a valid PackageIdString (as described in ``value.proto``).
   //
   // Required
-  string package_id = 1;
+  string package_id = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Filter the VettedPackages by package metadata.

@@ -5,6 +5,7 @@ syntax = "proto3";
 
 package com.daml.ledger.api.v2.testing;
 
+import "google/api/field_behavior.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -33,7 +34,7 @@ message GetTimeResponse {
   // The current time according to the ledger server.
   //
   // Required
-  google.protobuf.Timestamp current_time = 1;
+  google.protobuf.Timestamp current_time = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message SetTimeRequest {
@@ -41,11 +42,11 @@ message SetTimeRequest {
   // MUST precisely match the current time as it's known to the ledger server.
   //
   // Required
-  google.protobuf.Timestamp current_time = 1;
+  google.protobuf.Timestamp current_time = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The time the client wants to set on the ledger.
   // MUST be a point int time after ``current_time``.
   //
   // Required
-  google.protobuf.Timestamp new_time = 2;
+  google.protobuf.Timestamp new_time = 2 [(google.api.field_behavior) = REQUIRED];
 }

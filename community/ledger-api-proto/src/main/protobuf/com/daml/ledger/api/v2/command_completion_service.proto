@@ -8,6 +8,7 @@ package com.daml.ledger.api.v2;
 import "com/daml/ledger/api/v2/completion.proto";
 import "com/daml/ledger/api/v2/offset_checkpoint.proto";
 import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
 option csharp_namespace = "Com.Daml.Ledger.Api.V2";
@@ -68,7 +69,7 @@ message CompletionStreamRequest {
   // Must be a valid PartyIdString (as described in ``value.proto``).
   //
   // Required: must be non-empty
-  repeated string parties = 2;
+  repeated string parties = 2 [(google.api.field_behavior) = REQUIRED];
 
   // This optional field indicates the minimum offset for completions. This can be used to resume an earlier completion stream.
   // If not set the ledger uses the ledger begin offset instead.
@@ -110,7 +111,7 @@ message GetCompletionByHashRequest {
   // The transaction hash of the prepared transaction whose completion is being looked up.
   //
   // Required: must be non-empty
-  bytes transaction_hash = 1;
+  bytes transaction_hash = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GetCompletionByHashResponse {

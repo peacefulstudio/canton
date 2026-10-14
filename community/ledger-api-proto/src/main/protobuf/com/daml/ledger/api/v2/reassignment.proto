@@ -8,6 +8,7 @@ package com.daml.ledger.api.v2;
 import "com/daml/ledger/api/v2/event.proto";
 import "com/daml/ledger/api/v2/trace_context.proto";
 import "com/daml/ledger/api/v2/value.proto";
+import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
@@ -21,7 +22,7 @@ message Reassignment {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string update_id = 1;
+  string update_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the command which resulted in this reassignment. Missing for everyone except the submitting party on the submitting participant.
   // Must be a valid LedgerString (as described in ``value.proto``).
@@ -39,12 +40,12 @@ message Reassignment {
   // Must be a valid absolute offset (positive integer).
   //
   // Required
-  int64 offset = 4;
+  int64 offset = 4 [(google.api.field_behavior) = REQUIRED];
 
   // The collection of reassignment events.
   //
   // Required: must be non-empty
-  repeated ReassignmentEvent events = 5;
+  repeated ReassignmentEvent events = 5 [(google.api.field_behavior) = REQUIRED];
 
   // Ledger API trace context
   //
@@ -63,13 +64,13 @@ message Reassignment {
   // synchronizer for an unassign/assign event respectively.
   //
   // Required
-  google.protobuf.Timestamp record_time = 7;
+  google.protobuf.Timestamp record_time = 7 [(google.api.field_behavior) = REQUIRED];
 
   // A valid synchronizer id.
   // Identifies the synchronizer that synchronized this Reassignment.
   //
   // Required
-  string synchronizer_id = 8;
+  string synchronizer_id = 8 [(google.api.field_behavior) = REQUIRED];
 
   // The traffic cost that this participant node paid for the corresponding (un)assignment request.
   //
@@ -97,31 +98,31 @@ message UnassignedEvent {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string reassignment_id = 1;
+  string reassignment_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the reassigned contract.
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string contract_id = 2;
+  string contract_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The template of the reassigned contract.
   // The identifier uses the package-id reference format.
   //
   // Required
-  Identifier template_id = 3;
+  Identifier template_id = 3 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the source synchronizer
   // Must be a valid synchronizer id
   //
   // Required
-  string source = 4;
+  string source = 4 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the target synchronizer
   // Must be a valid synchronizer id
   //
   // Required
-  string target = 5;
+  string target = 5 [(google.api.field_behavior) = REQUIRED];
 
   // Party on whose behalf the unassign command was executed.
   // Empty if the unassignment happened offline via the repair service.
@@ -136,7 +137,7 @@ message UnassignedEvent {
   // Creation of the contract corresponds to reassignment_counter equal to zero.
   //
   // Required
-  uint64 reassignment_counter = 7;
+  uint64 reassignment_counter = 7 [(google.api.field_behavior) = REQUIRED];
 
   // Assignment exclusivity
   // Before this time (measured on the target synchronizer), only the submitter of the unassignment can initiate the assignment
@@ -148,12 +149,12 @@ message UnassignedEvent {
   // The parties that are notified of this event.
   //
   // Required: must be non-empty
-  repeated string witness_parties = 9;
+  repeated string witness_parties = 9 [(google.api.field_behavior) = REQUIRED];
 
   // The package name of the contract.
   //
   // Required
-  string package_name = 10;
+  string package_name = 10 [(google.api.field_behavior) = REQUIRED];
 
   // The offset of origin.
   // Offsets are managed by the participant nodes.
@@ -161,7 +162,7 @@ message UnassignedEvent {
   // Must be a valid absolute offset (positive integer)
   //
   // Required
-  int64 offset = 11;
+  int64 offset = 11 [(google.api.field_behavior) = REQUIRED];
 
   // The position of this event in the originating reassignment.
   // Node IDs are not necessarily equal across participants,
@@ -169,7 +170,7 @@ message UnassignedEvent {
   // Must be valid node ID (non-negative integer)
   //
   // Required
-  int32 node_id = 12;
+  int32 node_id = 12 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Records that a contract has been assigned, and it can be used on the target synchronizer.
@@ -178,20 +179,20 @@ message AssignedEvent {
   // Must be a valid synchronizer id.
   //
   // Required
-  string source = 1;
+  string source = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the target synchronizer.
   // Must be a valid synchronizer id.
   //
   // Required
-  string target = 2;
+  string target = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The ID from the unassigned event.
   // For correlation capabilities.
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string reassignment_id = 3;
+  string reassignment_id = 3 [(google.api.field_behavior) = REQUIRED];
 
   // Party on whose behalf the assign command was executed.
   // Empty if the assignment happened offline via the repair service.
@@ -206,11 +207,11 @@ message AssignedEvent {
   // Creation of the contract corresponds to reassignment_counter equal to zero.
   //
   // Required
-  uint64 reassignment_counter = 5;
+  uint64 reassignment_counter = 5 [(google.api.field_behavior) = REQUIRED];
 
   // The offset of this event refers to the offset of the assignment,
   // while the node_id is the index of within the batch.
   //
   // Required
-  CreatedEvent created_event = 6;
+  CreatedEvent created_event = 6 [(google.api.field_behavior) = REQUIRED];
 }

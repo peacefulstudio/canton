@@ -7,6 +7,7 @@ package com.daml.ledger.api.v2.admin;
 
 import "com/daml/ledger/api/v2/package_reference.proto";
 import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2/admin;adminv2";
@@ -64,7 +65,7 @@ message ListKnownPackagesResponse {
   // The details of all Daml-LF packages known to backing participant.
   //
   // Required: must be non-empty
-  repeated PackageDetails package_details = 1;
+  repeated PackageDetails package_details = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message PackageDetails {
@@ -72,28 +73,28 @@ message PackageDetails {
   // Must be a valid PackageIdString (as describe in ``value.proto``).
   //
   // Required
-  string package_id = 1;
+  string package_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Size of the package in bytes.
   // The size of the package is given by the size of the ``daml_lf``
   // ArchivePayload. See further details in ``daml_lf.proto``.
   //
   // Required
-  uint64 package_size = 2;
+  uint64 package_size = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Indicates since when the package is known to the backing participant.
   // Required
-  google.protobuf.Timestamp known_since = 3;
+  google.protobuf.Timestamp known_since = 3 [(google.api.field_behavior) = REQUIRED];
 
   // Name of the package as defined by the package metadata
   //
   // Required
-  string name = 4;
+  string name = 4 [(google.api.field_behavior) = REQUIRED];
 
   // Version of the package as defined by the package metadata
   //
   // Required
-  string version = 5;
+  string version = 5 [(google.api.field_behavior) = REQUIRED];
 }
 
 message UploadDarFileRequest {
@@ -102,7 +103,7 @@ message UploadDarFileRequest {
   // ``daml_lf.proto``.
   //
   // Required: must be non-empty
-  bytes dar_file = 1;
+  bytes dar_file = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Unique submission identifier.
   // If not populated, a random identifier will be generated.
@@ -149,7 +150,7 @@ message ValidateDarFileRequest {
   // ``daml_lf.proto``.
   //
   // Required: must be non-empty
-  bytes dar_file = 1;
+  bytes dar_file = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Unique submission identifier. If not defined, defaults to a random identifier.
   //
@@ -178,7 +179,7 @@ message VettedPackagesChange {
     // unvetted.
     //
     // Required: must be non-empty
-    repeated VettedPackagesRef packages = 1;
+    repeated VettedPackagesRef packages = 1 [(google.api.field_behavior) = REQUIRED];
   }
 
   // Set vetting bounds of a list of packages. Packages that were not previously
@@ -191,7 +192,7 @@ message VettedPackagesChange {
     // words, every reference must match exactly one package.
     //
     // Required: must be non-empty
-    repeated VettedPackagesRef packages = 1;
+    repeated VettedPackagesRef packages = 1 [(google.api.field_behavior) = REQUIRED];
 
     // The time from which these packages should be vetted, prior lower bounds
     // are overwritten.
@@ -247,7 +248,7 @@ message UpdateVettedPackagesRequest {
   // Any package not changed will keep their previous vetting state.
   //
   // Required: must be non-empty
-  repeated VettedPackagesChange changes = 1;
+  repeated VettedPackagesChange changes = 1 [(google.api.field_behavior) = REQUIRED];
 
   // If dry_run is true, then the changes are only prepared, but not applied. If
   // a request would trigger an error when run (e.g. TOPOLOGY_DEPENDENCIES_NOT_VETTED),
@@ -309,5 +310,5 @@ message UpdateVettedPackagesResponse {
   // All vetted packages on this participant and synchronizer, after the specified changes.
   //
   // Required
-  VettedPackages new_vetted_packages = 2;
+  VettedPackages new_vetted_packages = 2 [(google.api.field_behavior) = REQUIRED];
 }

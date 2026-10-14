@@ -5,6 +5,8 @@ syntax = "proto3";
 
 package com.daml.ledger.api.v2;
 
+import "google/api/field_behavior.proto";
+
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
 option csharp_namespace = "Com.Daml.Ledger.Api.V2";
 option java_outer_classname = "ReassignmentCommandOuterClass";
@@ -31,7 +33,7 @@ message ReassignmentCommands {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string command_id = 3;
+  string command_id = 3 [(google.api.field_behavior) = REQUIRED];
 
   // Party on whose behalf the command should be executed.
   // If ledger API authorization is enabled, then the authorization metadata must authorize the sender of the request
@@ -39,7 +41,7 @@ message ReassignmentCommands {
   // Must be a valid PartyIdString (as described in ``value.proto``).
   //
   // Required
-  string submitter = 4;
+  string submitter = 4 [(google.api.field_behavior) = REQUIRED];
 
   // A unique identifier to distinguish completions for different submissions with the same change ID.
   // Typically a random UUID. Applications are expected to use a different UUID for each retry of a submission
@@ -54,7 +56,7 @@ message ReassignmentCommands {
   // Individual elements of this reassignment. Must be non-empty.
   //
   // Required: must be non-empty
-  repeated ReassignmentCommand commands = 6;
+  repeated ReassignmentCommand commands = 6 [(google.api.field_behavior) = REQUIRED];
 }
 
 message ReassignmentCommand {
@@ -71,19 +73,19 @@ message UnassignCommand {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string contract_id = 1;
+  string contract_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the source synchronizer
   // Must be a valid synchronizer id
   //
   // Required
-  string source = 2;
+  string source = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the target synchronizer
   // Must be a valid synchronizer id
   //
   // Required
-  string target = 3;
+  string target = 3 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Assign a contract
@@ -92,17 +94,17 @@ message AssignCommand {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string reassignment_id = 1;
+  string reassignment_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the source synchronizer
   // Must be a valid synchronizer id
   //
   // Required
-  string source = 2;
+  string source = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the target synchronizer
   // Must be a valid synchronizer id
   //
   // Required
-  string target = 3;
+  string target = 3 [(google.api.field_behavior) = REQUIRED];
 }

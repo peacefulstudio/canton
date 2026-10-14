@@ -5,6 +5,7 @@ syntax = "proto3";
 
 package com.daml.ledger.api.v2;
 
+import "google/api/field_behavior.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -15,11 +16,11 @@ option java_package = "com.daml.ledger.api.v2";
 
 message PackageReference {
   // Required
-  string package_id = 1;
+  string package_id = 1 [(google.api.field_behavior) = REQUIRED];
   // Required
-  string package_name = 2;
+  string package_name = 2 [(google.api.field_behavior) = REQUIRED];
   // Required
-  string package_version = 3;
+  string package_version = 3 [(google.api.field_behavior) = REQUIRED];
 }
 
 // A package that is vetting on a given participant and synchronizer,
@@ -29,7 +30,7 @@ message VettedPackage {
   // Package ID of this package
   //
   // Required
-  string package_id = 1;
+  string package_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The time from which this package is vetted. Empty if vetting time has no
   // lower bound.
@@ -65,23 +66,23 @@ message VettedPackages {
   // last resort.
   //
   // Required: must be non-empty
-  repeated VettedPackage packages = 1;
+  repeated VettedPackage packages = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Participant on which these packages are vetted.
   //
   // Required
-  string participant_id = 2;
+  string participant_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Synchronizer on which these packages are vetted.
   //
   // Required
-  string synchronizer_id = 3;
+  string synchronizer_id = 3 [(google.api.field_behavior) = REQUIRED];
 
   // Serial of last ``VettedPackages`` topology transaction of this participant
   // and on this synchronizer.
   //
   // Required
-  uint32 topology_serial = 4;
+  uint32 topology_serial = 4 [(google.api.field_behavior) = REQUIRED];
 }
 
 // The serial of last ``VettedPackages`` topology transaction on a given

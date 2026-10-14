@@ -5,6 +5,8 @@ syntax = "proto3";
 
 package com.daml.ledger.api.v2.admin;
 
+import "google/api/field_behavior.proto";
+
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2/admin;adminv2";
 option csharp_namespace = "Com.Daml.Ledger.Api.V2.Admin";
 option java_outer_classname = "ParticipantPruningServiceOuterClass";
@@ -38,7 +40,7 @@ message PruneRequest {
   //    they were archived before `prune_up_to`.
   //
   // Required
-  int64 prune_up_to = 1;
+  int64 prune_up_to = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Unique submission identifier.
   // If not populated, defaults to a random identifier, used for logging.

@@ -6,6 +6,7 @@ syntax = "proto3";
 package com.daml.ledger.api.v2.admin;
 
 import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
 import "google/protobuf/field_mask.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2/admin;adminv2";
@@ -82,7 +83,7 @@ message IdentityProviderConfig {
   // Must be a valid LedgerString (as describe in ``value.proto``).
   //
   // Required
-  string identity_provider_id = 1;
+  string identity_provider_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // When set, the callers using JWT tokens issued by this identity provider are denied all access
   // to the Ledger API.
@@ -99,7 +100,7 @@ message IdentityProviderConfig {
   // Can be left empty when used in `UpdateIdentityProviderConfigRequest` if the issuer is not being updated.
   //
   // Required
-  string issuer = 3;
+  string issuer = 3 [(google.api.field_behavior) = REQUIRED];
 
   // The JWKS (JSON Web Key Set) URL.
   // The Ledger API uses JWKs (JSON Web Keys) from the provided URL to verify that the JWT has been
@@ -107,7 +108,7 @@ message IdentityProviderConfig {
   // Modifiable
   //
   // Required
-  string jwks_url = 4;
+  string jwks_url = 4 [(google.api.field_behavior) = REQUIRED];
 
   // Specifies the audience of the JWT token.
   // When set, the callers using JWT tokens issued by this identity provider are allowed to get an access
@@ -120,22 +121,22 @@ message IdentityProviderConfig {
 
 message CreateIdentityProviderConfigRequest {
   // Required
-  IdentityProviderConfig identity_provider_config = 1;
+  IdentityProviderConfig identity_provider_config = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message CreateIdentityProviderConfigResponse {
   // Required
-  IdentityProviderConfig identity_provider_config = 1;
+  IdentityProviderConfig identity_provider_config = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GetIdentityProviderConfigRequest {
   // Required
-  string identity_provider_id = 1;
+  string identity_provider_id = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GetIdentityProviderConfigResponse {
   // Required
-  IdentityProviderConfig identity_provider_config = 1;
+  IdentityProviderConfig identity_provider_config = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message ListIdentityProviderConfigsRequest {
@@ -146,7 +147,7 @@ message ListIdentityProviderConfigsResponse {
   // The list of identity provider configs
   //
   // Required: must be non-empty
-  repeated IdentityProviderConfig identity_provider_configs = 1;
+  repeated IdentityProviderConfig identity_provider_configs = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message UpdateIdentityProviderConfigRequest {
@@ -154,7 +155,7 @@ message UpdateIdentityProviderConfigRequest {
   // Modifiable
   //
   // Required
-  IdentityProviderConfig identity_provider_config = 1;
+  IdentityProviderConfig identity_provider_config = 1 [(google.api.field_behavior) = REQUIRED];
 
   // An update mask specifies how and which properties of the ``IdentityProviderConfig`` message are to be updated.
   // An update mask consists of a set of update paths.
@@ -168,21 +169,21 @@ message UpdateIdentityProviderConfigRequest {
   // For additional information see the documentation for standard protobuf3's ``google.protobuf.FieldMask``.
   //
   // Required
-  google.protobuf.FieldMask update_mask = 2;
+  google.protobuf.FieldMask update_mask = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 message UpdateIdentityProviderConfigResponse {
   // Updated identity provider config
   //
   // Required
-  IdentityProviderConfig identity_provider_config = 1;
+  IdentityProviderConfig identity_provider_config = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message DeleteIdentityProviderConfigRequest {
   // The identity provider config to delete.
   //
   // Required
-  string identity_provider_id = 1;
+  string identity_provider_id = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Does not (yet) contain any data.

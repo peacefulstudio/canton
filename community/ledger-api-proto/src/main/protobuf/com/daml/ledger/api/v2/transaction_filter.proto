@@ -6,6 +6,7 @@ syntax = "proto3";
 package com.daml.ledger.api.v2;
 
 import "com/daml/ledger/api/v2/value.proto";
+import "google/api/field_behavior.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
 option csharp_namespace = "Com.Daml.Ledger.Api.V2";
@@ -72,7 +73,7 @@ message InterfaceFilter {
   // Note: The package-id reference identifier format is deprecated. We plan to end support for this format in version 3.4.
   //
   // Required
-  Identifier interface_id = 1;
+  Identifier interface_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Whether to include the interface view on the contract in the returned ``CreatedEvent``.
   // Use this to access contract data in a uniform manner in your API client.
@@ -97,7 +98,7 @@ message TemplateFilter {
   // Note: The package-id reference identifier format is deprecated. We plan to end support for this format in version 3.4.
   //
   // Required
-  Identifier template_id = 1;
+  Identifier template_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Whether to include a ``created_event_blob`` in the returned ``CreatedEvent``.
   // Use this to access the contract event payload in your API client
@@ -157,12 +158,12 @@ enum TransactionShape {
 // and what data to compute and include for them.
 message TransactionFormat {
   // Required
-  EventFormat event_format = 1;
+  EventFormat event_format = 1 [(google.api.field_behavior) = REQUIRED];
 
   // What transaction shape to use for interpreting the filters of the event format.
   //
   // Required
-  TransactionShape transaction_shape = 2;
+  TransactionShape transaction_shape = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 // A format specifying which topology transactions to include and how to render them.

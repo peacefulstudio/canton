@@ -5,6 +5,8 @@ syntax = "proto3";
 
 package com.daml.ledger.api.v2;
 
+import "google/api/field_behavior.proto";
+
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
 option csharp_namespace = "Com.Daml.Ledger.Api.V2";
 option java_outer_classname = "CryptoOuterClass";
@@ -58,35 +60,35 @@ message SigningPublicKey {
   // The serialization format of the public key
   //
   // Required
-  CryptoKeyFormat format = 1;
+  CryptoKeyFormat format = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Serialized public key in the format specified above
   //
   // Required: must be non-empty
-  bytes key_data = 2;
+  bytes key_data = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The key specification
   //
   // Required
-  SigningKeySpec key_spec = 3;
+  SigningKeySpec key_spec = 3 [(google.api.field_behavior) = REQUIRED];
 }
 
 message Signature {
   // Required
-  SignatureFormat format = 1;
+  SignatureFormat format = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Required: must be non-empty
-  bytes signature = 2;
+  bytes signature = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The fingerprint/id of the keypair used to create this signature and needed to verify.
   //
   // Required
-  string signed_by = 3;
+  string signed_by = 3 [(google.api.field_behavior) = REQUIRED];
 
   // The signing algorithm specification used to produce this signature
   //
   // Required
-  SigningAlgorithmSpec signing_algorithm_spec = 4;
+  SigningAlgorithmSpec signing_algorithm_spec = 4 [(google.api.field_behavior) = REQUIRED];
 }
 
 enum SigningAlgorithmSpec {

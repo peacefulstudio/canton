@@ -6,6 +6,7 @@ syntax = "proto3";
 package com.daml.ledger.api.v2.interactive;
 
 import "com/daml/ledger/api/v2/value.proto";
+import "google/api/field_behavior.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2/interactive;interactivev2";
 option csharp_namespace = "Com.Daml.Ledger.Api.V2.Interactive";
@@ -16,22 +17,22 @@ message GlobalKey {
   // The identifier uses the package-id reference format.
   //
   // Required
-  Identifier template_id = 1;
+  Identifier template_id = 1 [(google.api.field_behavior) = REQUIRED];
   // Required
-  string package_name = 2;
+  string package_name = 2 [(google.api.field_behavior) = REQUIRED];
   // Required
-  Value key = 3;
+  Value key = 3 [(google.api.field_behavior) = REQUIRED];
   // Required: must be non-empty
-  bytes hash = 4;
+  bytes hash = 4 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GlobalKeyWithMaintainers {
   // The key
   //
   // Required
-  GlobalKey key = 1;
+  GlobalKey key = 1 [(google.api.field_behavior) = REQUIRED];
   // Key maintainers
   //
   // Required: must be non-empty
-  repeated string maintainers = 2;
+  repeated string maintainers = 2 [(google.api.field_behavior) = REQUIRED];
 }

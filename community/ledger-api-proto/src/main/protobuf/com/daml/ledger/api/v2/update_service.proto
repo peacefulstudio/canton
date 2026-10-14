@@ -11,6 +11,7 @@ import "com/daml/ledger/api/v2/topology_transaction.proto";
 import "com/daml/ledger/api/v2/transaction.proto";
 import "com/daml/ledger/api/v2/transaction_filter.proto";
 import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
 option csharp_namespace = "Com.Daml.Ledger.Api.V2";
@@ -88,7 +89,7 @@ message GetUpdatesRequest {
   // If the participant has been pruned, this parameter must be greater or equal than the pruning offset.
 
   // Required
-  int64 begin_exclusive = 1;
+  int64 begin_exclusive = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Inclusive higher bound offset of the requested ledger section.
   // If specified the response will only contain transactions whose offset is less than or equal to this.
@@ -109,7 +110,7 @@ message GetUpdatesRequest {
   // The update format for this request
   //
   // Required
-  UpdateFormat update_format = 5;
+  UpdateFormat update_format = 5 [(google.api.field_behavior) = REQUIRED];
 
   // If set, the stream will populate the elements in descending order.
   //
@@ -134,12 +135,12 @@ message GetUpdateByOffsetRequest {
   // Must be a valid absolute offset (positive integer).
   //
   // Required
-  int64 offset = 1;
+  int64 offset = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The format for the update.
   //
   // Required
-  UpdateFormat update_format = 2;
+  UpdateFormat update_format = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GetUpdateByIdRequest {
@@ -147,24 +148,24 @@ message GetUpdateByIdRequest {
   // Must be a valid LedgerString (as described in ``value.proto``).
   //
   // Required
-  string update_id = 1;
+  string update_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The format for the update.
   //
   // Required
-  UpdateFormat update_format = 2;
+  UpdateFormat update_format = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GetUpdateByHashRequest {
   // The transaction hash to look up.
   //
   // Required: must be non-empty
-  bytes transaction_hash = 1;
+  bytes transaction_hash = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The format for the update.
   //
   // Required
-  UpdateFormat update_format = 2;
+  UpdateFormat update_format = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GetUpdateResponse {
@@ -203,7 +204,7 @@ message GetUpdatesPageRequest {
   optional int32 max_page_size = 3;
 
   // Required
-  UpdateFormat update_format = 4;
+  UpdateFormat update_format = 4 [(google.api.field_behavior) = REQUIRED];
 
   //If set, the page will populate the elements in descending order starting from the end_offset_inclusive.
   //
@@ -236,12 +237,12 @@ message GetUpdatesPageResponse {
   // Represents the lower bound of this page.
   //
   // Required
-  int64 lowest_page_offset_exclusive = 2;
+  int64 lowest_page_offset_exclusive = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Represents the upper bound of the page.
   //
   // Required
-  int64 highest_page_offset_inclusive = 3;
+  int64 highest_page_offset_inclusive = 3 [(google.api.field_behavior) = REQUIRED];
 
   // If the value is not populated, this is the last page.
   // If the value is populated, this token can be used to get the next page.

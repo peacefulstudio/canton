@@ -7,6 +7,7 @@ package com.daml.ledger.api.v2.admin;
 
 import "com/daml/ledger/api/v2/crypto.proto";
 import "com/daml/ledger/api/v2/state_service.proto";
+import "google/api/field_behavior.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2/admin;adminv2";
 option csharp_namespace = "Com.Daml.Ledger.Api.V2.Admin";
@@ -59,46 +60,46 @@ message GeneratePartyTopologyUpdateRequest {
   // The party to replicate.
   //
   // Required
-  string party_id = 1;
+  string party_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The synchronizer in which to replicate the party.
   //
   // Required
-  string synchronizer_id = 2;
+  string synchronizer_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The unique identifier of the target participant where the party will be replicated.
   //
   // Required
-  string target_participant_uid = 3;
+  string target_participant_uid = 3 [(google.api.field_behavior) = REQUIRED];
 
   // The permission level of the party on the target participant.
   //
   // Required
-  ParticipantPermission participant_permission = 4;
+  ParticipantPermission participant_permission = 4 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GeneratePartyTopologyUpdateResponse {
   // The serialized topology transaction which needs to be signed.
   //
   // Required: must be non-empty
-  bytes transaction = 1;
+  bytes transaction = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The hash that needs be signed (to sign the topology transaction).
   //
   // Required: must be non-empty
-  bytes hash = 2;
+  bytes hash = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 message AuthorizePartyUpdateRequest {
   // The synchronizer where the party is being replicated.
   //
   // Required
-  string synchronizer_id = 1;
+  string synchronizer_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The serialized PartyToParticipant topology transaction.
   //
   // Required: must be non-empty
-  bytes transaction = 2;
+  bytes transaction = 2 [(google.api.field_behavior) = REQUIRED];
 
   // External signatures authorizing the topology transaction.
   //
@@ -128,22 +129,22 @@ message GetAddPartyStatusRequest {
   // The party replicating to the target participant.
   //
   // Required
-  string party_id = 1;
+  string party_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The synchronizer in which the party is being replicated.
   //
   // Required
-  string synchronizer_id = 2;
+  string synchronizer_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The unique identifier of the target participant where the party is replicating to.
   //
   // Required
-  string target_participant_uid = 3;
+  string target_participant_uid = 3 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GetAddPartyStatusResponse {
   // Required
-  PartyReplicationStatus status = 1;
+  PartyReplicationStatus status = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Describes the status of a party replication operation.
@@ -174,13 +175,13 @@ message PartyReplicationStatus {
     // The descriptive error message.
     //
     // Required
-    string message = 1;
+    string message = 1 [(google.api.field_behavior) = REQUIRED];
   }
 
   // The overall lifecycle state of the replication operation.
   //
   // Required
-  State current = 1;
+  State current = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Diagnostic details, populated when an error occurs (i.e., when state is STATE_FAILED).
   //

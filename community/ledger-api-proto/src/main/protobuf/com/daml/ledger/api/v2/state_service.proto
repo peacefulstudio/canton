@@ -10,6 +10,7 @@ import "com/daml/ledger/api/v2/offset_checkpoint.proto";
 import "com/daml/ledger/api/v2/reassignment.proto";
 import "com/daml/ledger/api/v2/transaction_filter.proto";
 import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
@@ -93,13 +94,13 @@ message GetActiveContractsRequest {
   // If zero, the empty set will be returned.
   //
   // Required
-  int64 active_at_offset = 3;
+  int64 active_at_offset = 3 [(google.api.field_behavior) = REQUIRED];
 
   // Format of the contract_entries in the result. In case of CreatedEvent the presentation will be of
   // TRANSACTION_SHAPE_ACS_DELTA.
   //
   // Required
-  EventFormat event_format = 4;
+  EventFormat event_format = 4 [(google.api.field_behavior) = REQUIRED];
 
   // Opaque representation of a continuation token defining a position in the active contracts snapshot.
   // The prefix of the active contracts snapshot will be omitted up to and including the element from which
@@ -132,7 +133,7 @@ message GetActiveContractsPageRequest {
   // TRANSACTION_SHAPE_ACS_DELTA.
   //
   // Required
-  EventFormat event_format = 2;
+  EventFormat event_format = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The result page will contain at most max_page_size entries of the respective active contract snapshot.
   // The server might reject max_page_size breaching the server-specified limit.
@@ -200,13 +201,13 @@ message GetActiveContractsPageResponse {
   // The collection of active contracts for this page response.
   //
   // Required: must be non-empty
-  repeated GetActiveContractsResponse active_contracts = 1;
+  repeated GetActiveContractsResponse active_contracts = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The active_at_offset which was specified in the request, or the calculated active_at_offset from the actual
   // ledger end from at the evaluation of the request.
   //
   // Required
-  int64 active_at_offset = 2;
+  int64 active_at_offset = 2 [(google.api.field_behavior) = REQUIRED];
 
   // If not present this is the last page. If present, this token must be used to get the next page.
   //
@@ -222,12 +223,12 @@ message ActiveContract {
   // for lookups.
   //
   // Required
-  CreatedEvent created_event = 1;
+  CreatedEvent created_event = 1 [(google.api.field_behavior) = REQUIRED];
 
   // A valid synchronizer id
   //
   // Required
-  string synchronizer_id = 2;
+  string synchronizer_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The reassignment counter of this event.
   //
@@ -237,7 +238,7 @@ message ActiveContract {
   // which is before the active_at_offset.
   //
   // Required
-  uint64 reassignment_counter = 3;
+  uint64 reassignment_counter = 3 [(google.api.field_behavior) = REQUIRED];
 }
 
 message IncompleteUnassigned {
@@ -249,15 +250,15 @@ message IncompleteUnassigned {
   // for lookups.
   //
   // Required
-  CreatedEvent created_event = 1;
+  CreatedEvent created_event = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Required
-  UnassignedEvent unassigned_event = 2;
+  UnassignedEvent unassigned_event = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 message IncompleteAssigned {
   // Required
-  AssignedEvent assigned_event = 1;
+  AssignedEvent assigned_event = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message GetConnectedSynchronizersRequest {
@@ -287,12 +288,12 @@ message GetConnectedSynchronizersResponse {
     // The alias of the synchronizer
     //
     // Required
-    string synchronizer_alias = 1;
+    string synchronizer_alias = 1 [(google.api.field_behavior) = REQUIRED];
 
     // The ID of the synchronizer
     //
     // Required
-    string synchronizer_id = 2;
+    string synchronizer_id = 2 [(google.api.field_behavior) = REQUIRED];
 
     // The permission on the synchronizer
     // Set if a party was used in the request, otherwise unspecified.
@@ -370,13 +371,13 @@ message GetLatestPrunedOffsetsResponse {
 message ConvertRecordTimeToOffsetRequest {
   // The record time to be converted to an offset
   // Required
-  google.protobuf.Timestamp record_time = 1;
+  google.protobuf.Timestamp record_time = 1 [(google.api.field_behavior) = REQUIRED];
 
   // The ID of the synchronizer
   // Must be a synchronizer from which the participant had received at least one update ever.
   //
   // Required
-  string synchronizer_id = 2;
+  string synchronizer_id = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 message ConvertRecordTimeToOffsetResponse {
@@ -384,5 +385,5 @@ message ConvertRecordTimeToOffsetResponse {
   // Must be a valid absolute offset (positive integer).
   //
   // Required
-  int64 offset = 1;
+  int64 offset = 1 [(google.api.field_behavior) = REQUIRED];
 }
