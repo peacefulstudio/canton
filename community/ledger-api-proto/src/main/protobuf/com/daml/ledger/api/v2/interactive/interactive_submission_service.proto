@@ -13,7 +13,6 @@ import "com/daml/ledger/api/v2/package_reference.proto";
 import "com/daml/ledger/api/v2/transaction.proto";
 import "com/daml/ledger/api/v2/transaction_filter.proto";
 import "com/daml/ledger/api/v2/value.proto";
-import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
@@ -57,12 +56,7 @@ service InteractiveSubmissionService {
   // a `FAILED_PRECONDITION` error will be returned.
   //
   // Can be accessed by any Ledger API client with a valid token when Ledger API authorization is enabled.
-  rpc GetPreferredPackages(GetPreferredPackagesRequest) returns (GetPreferredPackagesResponse) {
-    option (google.api.http) = {
-      post: "/v2/interactive-submission/preferred-packages"
-      body: "*"
-    };
-  }
+  rpc GetPreferredPackages(GetPreferredPackagesRequest) returns (GetPreferredPackagesResponse);
 }
 
 // Hints to improve cost estimation precision of a prepared transaction

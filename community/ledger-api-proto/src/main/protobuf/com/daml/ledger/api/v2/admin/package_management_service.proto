@@ -6,7 +6,6 @@ syntax = "proto3";
 package com.daml.ledger.api.v2.admin;
 
 import "com/daml/ledger/api/v2/package_reference.proto";
-import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -41,12 +40,7 @@ service PackageManagementService {
   rpc ValidateDarFile(ValidateDarFileRequest) returns (ValidateDarFileResponse);
 
   // Update the vetted packages of this participant
-  rpc UpdateVettedPackages(UpdateVettedPackagesRequest) returns (UpdateVettedPackagesResponse) {
-    option (google.api.http) = {
-      post: "/v2/package-vetting/update"
-      body: "*"
-    };
-  }
+  rpc UpdateVettedPackages(UpdateVettedPackagesRequest) returns (UpdateVettedPackagesResponse);
 }
 
 message ListKnownPackagesRequest {}

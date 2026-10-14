@@ -6,7 +6,6 @@ syntax = "proto3";
 package com.daml.ledger.api.v2.admin;
 
 import "com/daml/ledger/api/v2/admin/object_meta.proto";
-import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/field_mask.proto";
 
@@ -45,23 +44,13 @@ option java_package = "com.daml.ledger.api.v2.admin";
 // In order to grant or revoke user rights use ``GrantRights' and ``RevokeRights`` RPCs.
 service UserManagementService {
   // Create a new user.
-  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
-    option (google.api.http) = {
-      post: "/v2/users"
-      body: "*"
-    };
-  }
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
 
   // Get the user data of a specific user or the authenticated user.
   rpc GetUser(GetUserRequest) returns (GetUserResponse);
 
   // Update selected modifiable attribute of a user resource described by the ``User`` message.
-  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
-    option (google.api.http) = {
-      patch: "/v2/users/{user.id}"
-      body: "*"
-    };
-  }
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
 
   // Delete an existing user and all its rights.
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
@@ -71,32 +60,17 @@ service UserManagementService {
 
   // Grant rights to a user.
   // Granting rights does not affect the resource version of the corresponding user.
-  rpc GrantUserRights(GrantUserRightsRequest) returns (GrantUserRightsResponse) {
-    option (google.api.http) = {
-      post: "/v2/users/{user_id}/rights"
-      body: "*"
-    };
-  }
+  rpc GrantUserRights(GrantUserRightsRequest) returns (GrantUserRightsResponse);
 
   // Revoke rights from a user.
   // Revoking rights does not affect the resource version of the corresponding user.
-  rpc RevokeUserRights(RevokeUserRightsRequest) returns (RevokeUserRightsResponse) {
-    option (google.api.http) = {
-      patch: "/v2/users/{user_id}/rights"
-      body: "*"
-    };
-  }
+  rpc RevokeUserRights(RevokeUserRightsRequest) returns (RevokeUserRightsResponse);
 
   // List the set of all rights granted to a user.
   rpc ListUserRights(ListUserRightsRequest) returns (ListUserRightsResponse);
 
   // Update the assignment of a user from one IDP to another.
-  rpc UpdateUserIdentityProviderId(UpdateUserIdentityProviderIdRequest) returns (UpdateUserIdentityProviderIdResponse) {
-    option (google.api.http) = {
-      patch: "/v2/users/{user_id}/identity-provider-id"
-      body: "*"
-    };
-  }
+  rpc UpdateUserIdentityProviderId(UpdateUserIdentityProviderIdRequest) returns (UpdateUserIdentityProviderIdResponse);
 }
 
 // Users and rights

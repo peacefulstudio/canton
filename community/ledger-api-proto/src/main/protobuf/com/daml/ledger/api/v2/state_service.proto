@@ -9,7 +9,6 @@ import "com/daml/ledger/api/v2/event.proto";
 import "com/daml/ledger/api/v2/offset_checkpoint.proto";
 import "com/daml/ledger/api/v2/reassignment.proto";
 import "com/daml/ledger/api/v2/transaction_filter.proto";
-import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -36,30 +35,17 @@ service StateService {
   // the client SHOULD begin retrieving updates from the update service,
   // starting at the ``GetActiveContractsPageResponse``.``active_at_offset`` specified in this request.
   // Clients SHOULD NOT assume that the set of active contracts they receive reflects the state at the ledger end.
-  rpc GetActiveContractsPage(GetActiveContractsPageRequest) returns (GetActiveContractsPageResponse) {
-    option (google.api.http) = {
-      post: "/v2/state/active-contracts-page"
-      body: "*"
-    };
-  }
+  rpc GetActiveContractsPage(GetActiveContractsPageRequest) returns (GetActiveContractsPageResponse);
 
   // Get the list of connected synchronizers at the time of the query.
-  rpc GetConnectedSynchronizers(GetConnectedSynchronizersRequest) returns (GetConnectedSynchronizersResponse) {
-    option (google.api.http) = {
-      get: "/v2/state/connected-synchronizers"
-    };
-  }
+  rpc GetConnectedSynchronizers(GetConnectedSynchronizersRequest) returns (GetConnectedSynchronizersResponse);
 
   // Get the current ledger end.
   // Subscriptions started with the returned offset will serve events after this RPC was called.
   rpc GetLedgerEnd(GetLedgerEndRequest) returns (GetLedgerEndResponse);
 
   // Get the latest successfully pruned ledger offsets
-  rpc GetLatestPrunedOffsets(GetLatestPrunedOffsetsRequest) returns (GetLatestPrunedOffsetsResponse) {
-    option (google.api.http) = {
-      get: "/v2/state/latest-pruned-offsets"
-    };
-  }
+  rpc GetLatestPrunedOffsets(GetLatestPrunedOffsetsRequest) returns (GetLatestPrunedOffsetsResponse);
 
   // Translate syncrhonizer record time to an offset
   // If the requested record time is earlier that the earliest record time known for the given synchronizer

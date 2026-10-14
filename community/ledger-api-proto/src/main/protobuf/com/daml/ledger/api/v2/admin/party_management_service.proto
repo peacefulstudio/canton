@@ -7,7 +7,6 @@ package com.daml.ledger.api.v2.admin;
 
 import "com/daml/ledger/api/v2/admin/object_meta.proto";
 import "com/daml/ledger/api/v2/crypto.proto";
-import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/field_mask.proto";
 
@@ -42,11 +41,7 @@ service PartyManagementService {
   // All horizontally scaled replicas should return the same id.
   // daml-on-kv-ledger: returns an identifier supplied on command line at launch time
   // canton: returns globally unique identifier of the participant
-  rpc GetParticipantId(GetParticipantIdRequest) returns (GetParticipantIdResponse) {
-    option (google.api.http) = {
-      get: "/v2/parties/participant-id"
-    };
-  }
+  rpc GetParticipantId(GetParticipantIdRequest) returns (GetParticipantIdResponse);
 
   // Get the party details of the given parties. Only known parties will be
   // returned in the list.
@@ -74,12 +69,7 @@ service PartyManagementService {
   // is richer than the surface protocol, the arguments take implicit values
   // The party identifier suggestion must be a valid party name. Party names are required to be non-empty US-ASCII strings built from letters, digits, space,
   // colon, minus and underscore limited to 255 chars
-  rpc AllocateParty(AllocatePartyRequest) returns (AllocatePartyResponse) {
-    option (google.api.http) = {
-      post: "/v2/parties"
-      body: "*"
-    };
-  }
+  rpc AllocateParty(AllocatePartyRequest) returns (AllocatePartyResponse);
 
   // Alpha 3.3: Endpoint to allocate a new external party on a synchronizer
   //
@@ -94,21 +84,11 @@ service PartyManagementService {
   // In the simple case of a non-multi hosted, non-decentralized party, the RPC will return once the party is
   // effectively allocated and ready to use, similarly to the AllocateParty behavior.
   // For more complex scenarios applications may need to query the party status explicitly (only through the admin API as of now).
-  rpc AllocateExternalParty(AllocateExternalPartyRequest) returns (AllocateExternalPartyResponse) {
-    option (google.api.http) = {
-      post: "/v2/parties/external/allocate"
-      body: "*"
-    };
-  }
+  rpc AllocateExternalParty(AllocateExternalPartyRequest) returns (AllocateExternalPartyResponse);
 
   // Update selected modifiable participant-local attributes of a party details resource.
   // Can update the participant's local information for local parties.
-  rpc UpdatePartyDetails(UpdatePartyDetailsRequest) returns (UpdatePartyDetailsResponse) {
-    option (google.api.http) = {
-      patch: "/v2/parties/{party_details.party}"
-      body: "*"
-    };
-  }
+  rpc UpdatePartyDetails(UpdatePartyDetailsRequest) returns (UpdatePartyDetailsResponse);
 
   // Update the assignment of a party from one IDP to another.
   rpc UpdatePartyIdentityProviderId(UpdatePartyIdentityProviderIdRequest) returns (UpdatePartyIdentityProviderIdResponse);
@@ -123,12 +103,7 @@ service PartyManagementService {
   // Note that this request will create a normal namespace using the same key for the
   // identity as for signing. More elaborate schemes such as multi-signature
   // or decentralized parties require you to construct the topology transactions yourself.
-  rpc GenerateExternalPartyTopology(GenerateExternalPartyTopologyRequest) returns (GenerateExternalPartyTopologyResponse) {
-    option (google.api.http) = {
-      post: "/v2/parties/external/generate-topology"
-      body: "*"
-    };
-  }
+  rpc GenerateExternalPartyTopology(GenerateExternalPartyTopologyRequest) returns (GenerateExternalPartyTopologyResponse);
 }
 
 // Required authorization: ``HasRight(ParticipantAdmin)``

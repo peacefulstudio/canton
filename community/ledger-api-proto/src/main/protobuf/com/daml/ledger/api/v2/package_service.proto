@@ -6,7 +6,6 @@ syntax = "proto3";
 package com.daml.ledger.api.v2;
 
 import "com/daml/ledger/api/v2/package_reference.proto";
-import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
@@ -62,30 +61,17 @@ enum HashFunction {
 // Allows clients to query the Daml-LF packages that are supported by the server.
 service PackageService {
   // Returns the identifiers of all supported packages.
-  rpc ListPackages(ListPackagesRequest) returns (ListPackagesResponse) {
-    option (google.api.http) = {
-      get: "/v2/packages"
-    };
-  }
+  rpc ListPackages(ListPackagesRequest) returns (ListPackagesResponse);
 
   // Returns the contents of a single package.
   rpc GetPackage(GetPackageRequest) returns (GetPackageResponse);
 
   // Returns the status of a single package.
-  rpc GetPackageStatus(GetPackageStatusRequest) returns (GetPackageStatusResponse) {
-    option (google.api.http) = {
-      get: "/v2/packages/{package_id}/status"
-    };
-  }
+  rpc GetPackageStatus(GetPackageStatusRequest) returns (GetPackageStatusResponse);
 
   // Lists which participant node vetted what packages on which synchronizer.
   // Can be called by any authenticated user.
-  rpc ListVettedPackages(ListVettedPackagesRequest) returns (ListVettedPackagesResponse) {
-    option (google.api.http) = {
-      post: "/v2/package-vetting/list"
-      body: "*"
-    };
-  }
+  rpc ListVettedPackages(ListVettedPackagesRequest) returns (ListVettedPackagesResponse);
 }
 
 message ListPackagesRequest {}

@@ -10,7 +10,6 @@ import "com/daml/ledger/api/v2/reassignment.proto";
 import "com/daml/ledger/api/v2/topology_transaction.proto";
 import "com/daml/ledger/api/v2/transaction.proto";
 import "com/daml/ledger/api/v2/transaction_filter.proto";
-import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 
 option go_package = "github.com/digital-asset/canton/go/ledger/api/v2;ledgerapiv2";
@@ -41,21 +40,11 @@ service UpdateService {
 
   // Lookup an update by its offset.
   // If there is no update with this offset, or all the events are filtered, an UPDATE_NOT_FOUND error will be raised.
-  rpc GetUpdateByOffset(GetUpdateByOffsetRequest) returns (GetUpdateResponse) {
-    option (google.api.http) = {
-      post: "/v2/updates/update-by-offset"
-      body: "*"
-    };
-  }
+  rpc GetUpdateByOffset(GetUpdateByOffsetRequest) returns (GetUpdateResponse);
 
   // Lookup an update by its ID.
   // If there is no update with this ID, or all the events are filtered, an UPDATE_NOT_FOUND error will be raised.
-  rpc GetUpdateById(GetUpdateByIdRequest) returns (GetUpdateResponse) {
-    option (google.api.http) = {
-      post: "/v2/updates/update-by-id"
-      body: "*"
-    };
-  }
+  rpc GetUpdateById(GetUpdateByIdRequest) returns (GetUpdateResponse);
 
   // Look up an update by its transaction hash.
   // This is only available for updates received after upgrading to Canton version 3.6.
@@ -69,12 +58,7 @@ service UpdateService {
   //
   // - ACS delta: an event is included only if the requesting party is a stakeholder.
   // - ledger effects: an event is included if the requesting party is a witness.
-  rpc GetUpdatesPage(GetUpdatesPageRequest) returns (GetUpdatesPageResponse) {
-    option (google.api.http) = {
-      post: "/v2/updates/get-updates-page"
-      body: "*"
-    };
-  }
+  rpc GetUpdatesPage(GetUpdatesPageRequest) returns (GetUpdatesPageResponse);
 }
 
 message GetUpdatesRequest {
