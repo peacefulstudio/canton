@@ -13,6 +13,7 @@ import "com/daml/ledger/api/v2/package_reference.proto";
 import "com/daml/ledger/api/v2/transaction.proto";
 import "com/daml/ledger/api/v2/transaction_filter.proto";
 import "com/daml/ledger/api/v2/value.proto";
+import "google/api/annotations.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -31,15 +32,35 @@ option java_package = "com.daml.ledger.api.v2.interactive";
 // This gives callers the ability to sign the daml transaction with their own signing keys
 service InteractiveSubmissionService {
   // Requires `readAs` scope for the submitting party when LAPI User authorization is enabled
-  rpc PrepareSubmission(PrepareSubmissionRequest) returns (PrepareSubmissionResponse);
+  rpc PrepareSubmission(PrepareSubmissionRequest) returns (PrepareSubmissionResponse) {
+    option (google.api.http) = {
+      post: "/v2/interactive-submission/prepare"
+      body: "*"
+    };
+  }
   // Execute a prepared submission _asynchronously_ on the ledger.
   // Requires `actAs` or `executeAs` scope for the submitting party when LAPI User authorization is enabled
   // Requires a signature of the transaction from the submitting external party.
-  rpc ExecuteSubmission(ExecuteSubmissionRequest) returns (ExecuteSubmissionResponse);
+  rpc ExecuteSubmission(ExecuteSubmissionRequest) returns (ExecuteSubmissionResponse) {
+    option (google.api.http) = {
+      post: "/v2/interactive-submission/execute"
+      body: "*"
+    };
+  }
   // Similar to ExecuteSubmission but _synchronously_ wait for the completion of the transaction
-  rpc ExecuteSubmissionAndWait(ExecuteSubmissionAndWaitRequest) returns (ExecuteSubmissionAndWaitResponse);
+  rpc ExecuteSubmissionAndWait(ExecuteSubmissionAndWaitRequest) returns (ExecuteSubmissionAndWaitResponse) {
+    option (google.api.http) = {
+      post: "/v2/interactive-submission/executeAndWait"
+      body: "*"
+    };
+  }
   // Similar to ExecuteSubmissionAndWait but additionally returns the transaction
-  rpc ExecuteSubmissionAndWaitForTransaction(ExecuteSubmissionAndWaitForTransactionRequest) returns (ExecuteSubmissionAndWaitForTransactionResponse);
+  rpc ExecuteSubmissionAndWaitForTransaction(ExecuteSubmissionAndWaitForTransactionRequest) returns (ExecuteSubmissionAndWaitForTransactionResponse) {
+    option (google.api.http) = {
+      post: "/v2/interactive-submission/executeAndWaitForTransaction"
+      body: "*"
+    };
+  }
 
   // Compute the preferred packages for the vetting requirements in the request.
   // A preferred package is the highest-versioned package for a provided package-name
@@ -55,7 +76,12 @@ service InteractiveSubmissionService {
   // a `FAILED_PRECONDITION` error will be returned.
   //
   // Can be accessed by any Ledger API client with a valid token when Ledger API authorization is enabled.
-  rpc GetPreferredPackages(GetPreferredPackagesRequest) returns (GetPreferredPackagesResponse);
+  rpc GetPreferredPackages(GetPreferredPackagesRequest) returns (GetPreferredPackagesResponse) {
+    option (google.api.http) = {
+      post: "/v2/interactive-submission/preferred-packages"
+      body: "*"
+    };
+  }
 }
 
 // Hints to improve cost estimation precision of a prepared transaction

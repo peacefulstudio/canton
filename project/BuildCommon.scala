@@ -3213,7 +3213,8 @@ object BuildCommon {
         enablePublishLibrary,
         // we restrict the compilation to a few files that we actually need, skipping the large majority ...
         excludeFilter := HiddenFileFilter || "scalapb.proto",
-        PB.generate / includeFilter := "status.proto" || "code.proto" || "error_details.proto" || "health.proto",
+        PB.generate / includeFilter := "status.proto" || "code.proto" || "error_details.proto" || "health.proto" ||
+          "annotations.proto" || "http.proto",
         dependencyOverrides ++= Seq(),
         // compile proto files that we've extracted here
         Compile / PB.protoSources += (target.value / "protobuf_external"),
